@@ -54,17 +54,17 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             hadWarnning = true;
             Log($"[警告] {message}");  // 直接调用 Log，不再递归
         }
-
+        // 会抛出错误，不需要手动抛出
         public static void LogError(Exception err)
         {
-            Log($"[错误] {err}");  // 直接调用 Log，不再递归
+            Log($"[错误] {err.ToString()}");  // 直接调用 Log，不再递归
             ShowErrorDialog("出现错误", err);
             throw err;
         }
         // 会抛出错误，不需要手动抛出
         public static void LogError(AutoUIException err)
         {
-            Log($"[错误] {err}");  // 直接调用 Log，不再递归
+            Log($"[错误] {err.ToString()}");  // 直接调用 Log，不再递归
             ShowErrorDialog("出现错误", err);
             throw err;
         }

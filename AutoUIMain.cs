@@ -10,7 +10,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 {
     class AutoUI : EditorWindow
     {
-        public const string AutoUIConfigPath = "./AutoUIConfig.json";
 
         // 选择的文件夹位置
         public static string selectedFolderPath;
@@ -41,10 +40,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                         LogUtil.LogError(err);
                         return ;
                     }
+                    AutoUIConfig.GetAutoUIConfigData();
+                    imageNameToSpritePath=new Dictionary<string, string>();
                 }
-                catch (AutoUIException err)
+                catch (AutoUIException)
                 {
-                    LogUtil.LogError(err);
                     return;
                 }
                 catch (Exception err)
@@ -59,9 +59,22 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     layers = LayerJsonParser.ParseFromJson(json);
                     layers.VerifyLayers();
                 }
-                catch (AutoUIException err)
+                catch (AutoUIException)
+                {
+                    return;
+                }
+                catch (Exception err)
                 {
                     LogUtil.LogError(err);
+                    return;
+                }
+                LogUtil.Log("=== 导入图片 ===");
+                try{
+                    AutoUIImagesImportProcessor.ImageImportProcessor(selectedFolderPath);
+                    LogUtil.Log("导入全部图片");
+                }
+                catch (AutoUIException)
+                {
                     return;
                 }
                 catch (Exception err)
@@ -73,23 +86,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 try{
                     prefabGameObjec = AutoUIFrameworkProcesser.CreateCanvasWithData(layers);
                 }
-                catch (AutoUIException err)
+                catch (AutoUIException)
                 {
-                    LogUtil.LogError(err);
-                    return;
-                }
-                catch (Exception err)
-                {
-                    LogUtil.LogError(err);
-                    return;
-                }
-                LogUtil.Log("=== 导入图片并进行切图 ===");
-                try{
-                    AutoUIImagesImportProcessor.ImageImportProcessor(selectedFolderPath);
-                }
-                catch (AutoUIException err)
-                {
-                    LogUtil.LogError(err);
                     return;
                 }
                 catch (Exception err)
@@ -101,9 +99,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 try{
                     AutoUIFile.SavePrefabAndCleanup(prefabGameObjec);
                 }
-                catch (AutoUIException err)
+                catch (AutoUIException)
                 {
-                    LogUtil.LogError(err);
                     return;
                 }
                 catch (Exception err)
@@ -115,9 +112,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 try{
                     
                 }
-                catch (AutoUIException err)
+                catch (AutoUIException)
                 {
-                    LogUtil.LogError(err);
                     return;
                 }
                 catch (Exception err)

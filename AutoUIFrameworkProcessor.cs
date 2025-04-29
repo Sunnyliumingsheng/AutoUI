@@ -68,7 +68,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 if (layer.eLayerKind == ELayerKind.group)
                 {
                     // 在PS中为Group意味着下面还有东西，并且由于group图层没有任何图片文字信息所以除了rectTransfrom之外不需要处理
-
+                    ProcessFrameWork(layer.layers, layerGameObject.transform);
                 }
                 else
                 {

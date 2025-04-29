@@ -142,6 +142,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
            if (this.stretchStretchModeData!= null){
                 return this.stretchStretchModeData;
            }
+           var err = new AutoUIException(" 试图获取IUICoordinateSystem接口但是遇到了无法解析的rectTransform");
+           LogUtil.LogError(err);
            return null;
         }
     }
