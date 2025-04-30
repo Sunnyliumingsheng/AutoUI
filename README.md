@@ -3,6 +3,20 @@
 - main分支为的通用版本
 - mywar分支为mywar的专属版本
 
+### 普通版最终效果
+- ps中的图片
+![image](https://github.com/user-attachments/assets/49496d06-3c94-42a0-bc0c-aef3dcaa512f)
+
+- 导入到unity中的效果
+![屏幕截图 2025-04-29 213501](https://github.com/user-attachments/assets/5c33627f-9dce-4a61-afc2-a21f933076e3)
+
+你可以看到仅仅只有文字没有显示出来，这是字体的原因，只要在config.json中配置好字体并稍微修改代码即可
+
+### 使用说明
+首先利用我的PS插件，栅格化所有图层，然后提取到json和图片保存到一个文件夹中
+进入unity，打开tools中的AutoUI，之后选中文件夹
+就能自动生成一个UI prefab
+
 ### 图层识别
 我推荐将所有图片图层都格栅化为像素图层。
 矢量图层完全是不支持的。unity中不能做到
