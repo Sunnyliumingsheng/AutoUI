@@ -3,6 +3,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityFramework;
 
 namespace Assets.Scripts.Tools.Editor.AutoUI
 {
@@ -70,14 +71,23 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             tmp.text = layer.textLayerData.text;
             // todo : 寻找到一个合适的字体转化关系函数。并进行使用
             tmp.fontSize = AutoUIUtil.PSTextSizeToUnityTMPFontSize(Mathf.RoundToInt(layer.textLayerData.fontSize));
-            TMP_FontAsset tmpFontAsset = Resources.Load<TMPro.TMP_FontAsset>(AutoUIConfig.config.text.fontAssetPath);
+            TMP_FontAsset tmpFontAsset = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(AutoUIConfig.config.text.fontAssetPath);
+            if (tmpFontAsset == null){
+                LogUtil.LogError("找不到字体资源 路径为:"+AutoUIConfig.config.text.fontAssetPath);
+                return;
+            }
             tmp.font = tmpFontAsset;
             tmp.color = new Color(
                 layer.textLayerData.color.r / 255f,
                 layer.textLayerData.color.g / 255f,
                 layer.textLayerData.color.b / 255f
                 );
-            
+            var localizationTextTMP= layerGameObject.AddComponent<LocalizationText_TMP>();
+            // 使用反射来给私有成员mLabel赋值
+            var field=typeof(LocalizationText_TMP).GetField("mLabel",System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            field.SetValue(localizationTextTMP,tmp);
+            EditorUtility.SetDirty(localizationTextTMP);
+
         }
         
 

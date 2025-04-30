@@ -7,15 +7,22 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
     public class AutoUIException : Exception
     {
-        public string message;
-        public AutoUIException(string message){
-            this.message="AutoUI Error:"+message;
-         }
-        public override string ToString(){
-            return message;
+        public string warnning;
+        public AutoUIException(string message)
+            : base("AutoUI Error: " + message)
+        {
+            this.warnning = message;
+        }
+
+        public override string ToString()
+        {
+            // 使用 base.ToString() 保留原始堆栈信息
+            return base.ToString();
+        }
+        public string WarnningMessage(){
+            return this.warnning;
         }
     }
-
 
 
 
