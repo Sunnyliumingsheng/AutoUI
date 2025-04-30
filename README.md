@@ -5,10 +5,10 @@
 
 ### 普通版最终效果
 - ps中的图片
-![image](https://github.com/user-attachments/assets/49496d06-3c94-42a0-bc0c-aef3dcaa512f)
+ ![image](https://github.com/user-attachments/assets/49496d06-3c94-42a0-bc0c-aef3dcaa512f)
 
 - 导入到unity中的效果
-![屏幕截图 2025-04-29 213501](https://github.com/user-attachments/assets/5c33627f-9dce-4a61-afc2-a21f933076e3)
+ ![屏幕截图 2025-04-29 213501](https://github.com/user-attachments/assets/5c33627f-9dce-4a61-afc2-a21f933076e3)
 
 你可以看到仅仅只有文字没有显示出来，这是字体的原因，只要在config.json中配置好字体并稍微修改代码即可
 
