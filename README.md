@@ -13,6 +13,7 @@
 你可以看到仅仅只有文字没有显示出来，这是字体的原因，只要在config.json中配置好字体并稍微修改代码即可
 
 ### 使用说明
+https://github.com/Sunnyliumingsheng/PSDexport
 首先利用我的PS插件，栅格化所有图层，然后提取到json和图片保存到一个文件夹中
 进入unity，打开tools中的AutoUI，之后选中文件夹
 就能自动生成一个UI prefab
