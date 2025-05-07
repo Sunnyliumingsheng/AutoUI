@@ -20,6 +20,12 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static Dictionary<string, string> imageNameToSpritePath;
 
         [MenuItem("Tools/AutoUI")]
+        public static void ShowWindow(){
+            GetWindow<AutoUI>("AutoUI 交互面板");
+        }
+        private void OnGUI(){
+            AutoUIInteractive.Interactice();
+        }        
         public static void AutoUIMain()
         {
             {
@@ -96,7 +102,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 catch (AutoUIException err)
                 {
                     LogUtil.HandleAutoUIError(err);
-
                     return;
                 }
                 catch (Exception err)
@@ -120,10 +125,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.LogError(err);
                     return;
                 }
-                LogUtil.Log("=== 再次遍历并解析和使用组件 ==="); // 实际上，多遍历一次反而是最好的方案。
+                LogUtil.Log("=== 收尾工作 ==="); // 实际上，多遍历一次反而是最好的方案。
                 try
                 {
-
+                    LogUtil.Hint();
                 }
                 catch (AutoUIException err)
                 {
@@ -135,7 +140,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.LogError(err);
                     return;
                 }
-                LogUtil.Hint();
             }
         }
 
