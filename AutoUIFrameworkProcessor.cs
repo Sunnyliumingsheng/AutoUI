@@ -41,6 +41,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             // 设置Canvas大小
             UnityEngine.RectTransform canvasRect = canvasObj.GetComponent<UnityEngine.RectTransform>();
             canvasRect.sizeDelta = new Vector2(layers.canvasLayerData.width, layers.canvasLayerData.height);
+            var prefabPath= AutoUIFile.SavePrefabAndCleanup(canvasObj);
+            canvasObj=AutoUIUtil.OpenPrefabByPath(prefabPath);
 
             // 处理所有层
             ProcessFrameWork(layers.layers, canvasObj.transform);

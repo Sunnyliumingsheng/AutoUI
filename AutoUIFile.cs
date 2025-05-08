@@ -8,11 +8,12 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     public class AutoUIFile : EditorWindow
     {
         private static string prefabPath = "Assets/Prefabs/UI/test.prefab";
-        public static void SavePrefabAndCleanup(GameObject target)
+        // 保存一个gameobject为预制体，并返回其路径
+        public static string SavePrefabAndCleanup(GameObject target)
         {
             PrefabUtility.SaveAsPrefabAsset(target, prefabPath);
-            DestroyImmediate(target);
             AssetDatabase.Refresh();
+            return prefabPath;
         }
         public static string SelectFolderPath()
         {
@@ -38,6 +39,18 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             else
             {
                 return true;
+            }
+        }
+        // 选择本地文件夹中的图片，如果没有选择，则返回空字符串
+        public static string GUIChooseImagePath()
+        {
+            string path = EditorUtility.OpenFilePanel("选择图片", "", "png,jpg,jpeg");
+            if (!string.IsNullOrEmpty(path))
+            {
+                return path;
+            }
+            else{
+                return "";
             }
         }
 

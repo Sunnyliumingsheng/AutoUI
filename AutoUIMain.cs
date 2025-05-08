@@ -20,12 +20,15 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static Dictionary<string, string> imageNameToSpritePath;
 
         [MenuItem("Tools/AutoUI")]
-        public static void ShowWindow(){
+        public static void ShowWindow()
+        {
             GetWindow<AutoUI>("AutoUI 交互面板");
+            AutoUIMain();
         }
-        private void OnGUI(){
+        private void OnGUI()
+        {
             AutoUIInteractive.Interactice();
-        }        
+        }
         public static void AutoUIMain()
         {
             {
@@ -77,6 +80,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.LogError(err);
                     return;
                 }
+                /*
+                爷不用这种方式导入图片了，如果要用，只能在新项目立项的时候，规定好图片名称和路径的映射关系，或者图片都放到一个文件夹中，才能重新启用。
                 LogUtil.Log("=== 导入图片 ===");
                 try
                 {
@@ -94,6 +99,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.LogError(err);
                     return;
                 }
+                */
                 LogUtil.Log("=== 开始创建基本框架 ===");
                 try
                 {
@@ -109,15 +115,14 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.LogError(err);
                     return;
                 }
-                LogUtil.Log("=== 实例化相应的预制体 ===");
+                LogUtil.Log("===  ===");// 保存预制体的功能已经不再需要单独一步了。
                 try
                 {
-                    AutoUIFile.SavePrefabAndCleanup(prefabGameObjec);
+
                 }
                 catch (AutoUIException err)
                 {
                     LogUtil.HandleAutoUIError(err);
-
                     return;
                 }
                 catch (Exception err)
@@ -125,7 +130,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.LogError(err);
                     return;
                 }
-                LogUtil.Log("=== 收尾工作 ==="); // 实际上，多遍历一次反而是最好的方案。
+                LogUtil.Log("=== 收尾工作 ===");
                 try
                 {
                     LogUtil.Hint();

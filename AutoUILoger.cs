@@ -110,7 +110,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
             if (hadWarnning)
             {
-                EditorUtility.DisplayDialog("生成成功", "存在不严重的问题,请去桌面日志查看情况", "确定");
+                EditorUtility.DisplayDialog("生成成功", "存在不严重的问题,请去桌面日志查看情况\n 提示: 请检索[警告]", "确定");
             }
             else
             {
