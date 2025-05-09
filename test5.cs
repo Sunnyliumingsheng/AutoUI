@@ -20,22 +20,32 @@ public class JsonToUIPrefabCreator : EditorWindow
     [MenuItem("Tools/TestAutoUI")]
     public static void CreateUIPrefabFromJson()
     {
-        GetWindow<JsonToUIPrefabCreator>("testAutoUI 面板");
 
-        try
-        {
-            string[] result = AssetDatabase.FindAssets($"{searchString} t:Sprite");
-            foreach (string guid in result)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                LogUtil.Log($"找到Sprite路径: {path}");
-            }
-            UIPath = AssetDatabase.GUIDToAssetPath(result[0]);
-        }
-        catch (Exception e)
-        {
-            LogUtil.LogError($"生成UI预制体时出错: {e.Message}");
-        }
+        // 模拟主程序
+
+
+
+        GetWindow<JsonToUIPrefabCreator>("testAutoUI 面板");
+        int i = 0;
+        // while (true)
+        // {
+        //     Debug.Log(i++);
+        //     if (i==10000)
+        //     {
+        //         Debug.Log("时间结束");
+        //         return ;
+        //     }
+        //     if (toggleOption==true)
+        //     {
+        //         Debug.Log("按下按钮结束");
+        //         return;
+        //     }
+        // }
+
+
+        Debug.Log("已经结束了");
+        ;
+
     }
     private static string inputText = "默认文本";
     private static float numberValue = 0f;
@@ -43,24 +53,33 @@ public class JsonToUIPrefabCreator : EditorWindow
     private static int popupIndex = 0;
     private static string[] popupOptions = { "Middle Center", "Top Left", "Bottom Right" };
 
+    public enum ProcessState
+    {
+        Run,             // 初始空闲
+        WaitingUserInput, // 显示 GUI 等待
+    }
+    public static ProcessState _state = ProcessState.Run;
+    public void Update()
+    {
+        switch (_state)
+        {
+            case ProcessState.Run:
+                // 初始化开始，切换到等待
+                break;
+
+            case ProcessState.WaitingUserInput:
+                // 什么都不做，主线程静默
+                Debug.Log("等待中");
+                break;
+        }
+    }
+
+
     public void OnGUI()
     {
-        if (UIPath != null)
+        if (GUILayout.Button("点击暂停/开始"))
         {
-            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(UIPath);
-
-            Texture2D preview = AssetPreview.GetAssetPreview(sprite);
-            if (preview != null)
-            {
-                GUILayout.Label(preview, GUILayout.Width(64), GUILayout.Height(64));
-                GUILayout.Label("图片路径: " + UIPath);
-                GUILayout.Button("确认是这个");
-            }
-            else
-            {
-                GUILayout.Label("正在生成预览...");
-                Repaint();  // 让窗口刷新直到预览生成
-            }
+            _state = (_state == ProcessState.Run) ? ProcessState.WaitingUserInput : ProcessState.Run;
         }
         GUILayout.Label("自定义 UI 编辑器", EditorStyles.boldLabel);
 
@@ -75,14 +94,6 @@ public class JsonToUIPrefabCreator : EditorWindow
 
         // 4. 下拉选择框
         popupIndex = EditorGUILayout.Popup("锚点选项:", popupIndex, popupOptions);
-
-        // 5. 按钮
-        if (GUILayout.Button("确认"))
-        {
-
-        }
-
-        // 6. 实时刷新显示当前状态
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("当前状态：");
         EditorGUILayout.LabelField("文本：", inputText);
