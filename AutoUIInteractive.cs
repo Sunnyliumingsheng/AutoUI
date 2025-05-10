@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using BZTA;
 
 namespace Assets.Scripts.Tools.Editor.AutoUI
 {
@@ -113,12 +114,29 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         {
             return new GUINotSelectSprite();
         }
+        public static ProductBase CreateGUILayerConfirm()
+        {
+            return new GUILayerConfirm();
+        }
+        public static ProductBase CreateGUIRectTransformMode()
+        {
+            return new GUIRectTransformMode();
+        }
+        public static ProductBase CreateGUIOneCertainSprite()
+        {
+            return new GUIOneCertainSprite();
+        }
+        public static ProductBase CreateGUIManySpriteCandidate()
+        {
+            return new GUIManySpriteCandidate();
+        }
     }
 
     // 产品类，继承ProductBase，管理事件
     public class GUINotSelectSprite : ProductBase
     {
-        string srcPath;
+        string srcPath = "";
+        string destPath = "";
 
         public override ProductBase CreateProduct()
         {
@@ -136,25 +154,224 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 AutoUIEventManager.GUINotSelectSpriteEvent.Publish(this, new GUINotSelectSpriteEventArgs(true, "", ""));
             }
 
-            if (GUILayout.Button("选择本地路径导入图片"))
+            if (srcPath == "")
             {
-                srcPath = AutoUIFile.GUIChooseImagePath();
-                if (srcPath == "")
+                if (GUILayout.Button("选择本地路径导入图片"))
                 {
-                    LogUtil.AddWarning("没有成功选择图片");
-                    AutoUIEventManager.GUINotSelectSpriteEvent.Publish(this, new GUINotSelectSpriteEventArgs(true, "", ""));
-                    return;
-                }
+                    srcPath = AutoUIFile.GUIChooseImagePath();
+                    if (srcPath == "")
+                    {
+                        LogUtil.AddWarning("没有成功选择图片");
+                        AutoUIEventManager.GUINotSelectSpriteEvent.Publish(this, new GUINotSelectSpriteEventArgs(true, "", ""));
+                        return;
+                    }
 
+                }
+            }
+            else
+            {
+                EditorGUILayout.LabelField("选择的图片路径为：" + srcPath);
+                if (GUILayout.Button("重新选择本地图片路径"))
+                {
+                    srcPath = AutoUIFile.GUIChooseImagePath();
+                    if (srcPath == "")
+                    {
+                        LogUtil.AddWarning("没有成功选择图片");
+                        AutoUIEventManager.GUINotSelectSpriteEvent.Publish(this, new GUINotSelectSpriteEventArgs(true, "", ""));
+                        return;
+                    }
+
+                }
+            }
+
+            if (destPath == "")
+            {
                 if (GUILayout.Button("选择导入到项目中的路径"))
                 {
-                    string selectedFolder = EditorUtility.OpenFolderPanel("选择保存目录", "Assets", "");
+                    string destPath = EditorUtility.OpenFolderPanel("选择保存目录", "Assets/GameAssets/ABNew/SpriteAtlas/Sprites", "");
                 }
+            }
+            else
+            {
+                EditorGUILayout.LabelField("选择的导入路径为：" + destPath);
+                if (GUILayout.Button("重新选择导入到项目中的路径"))
+                {
+                    string destPath = EditorUtility.OpenFolderPanel("选择保存目录", "Assets/GameAssets/ABNew/SpriteAtlas/Sprites", "");
+                }
+            }
 
-                EditorGUILayout.LabelField("输入导入图片名称");
+            if (srcPath != "" && destPath != "")
+            {
+                if (GUILayout.Button("确定导入"))
+                {
+                    AutoUIEventManager.GUINotSelectSpriteEvent.Publish(this, new GUINotSelectSpriteEventArgs(false, srcPath, destPath));
+                }
             }
 
             EditorGUILayout.EndVertical();
         }
     }
+    // 普通图层可以选择这个
+    public class GUILayerConfirm : ProductBase
+    {
+        public override ProductBase CreateProduct()
+        {
+            return new GUILayerConfirm();
+        }
+        public override void Content()
+        {
+            EditorGUILayout.BeginVertical();
+            if (GUILayout.Button("确认"))
+            {
+                // 发布事件
+            }
+
+            EditorGUILayout.EndVertical();
+        }
+    }
+    public class GUIGroupConfirm : ProductBase
+    {
+        public override ProductBase CreateProduct()
+        {
+            return new GUIGroupConfirm();
+        }
+        public override void Content()
+        {
+            EditorGUILayout.BeginVertical();
+            if (GUILayout.Button("确认"))
+            {
+
+            }
+            if (GUILayout.Button("剪枝"))
+            {
+
+            }
+
+            EditorGUILayout.EndVertical();
+        }
+    }
+    public class GUIRectTransformMode : ProductBase
+    {
+        public override ProductBase CreateProduct()
+        {
+            return new GUIRectTransformMode();
+        }
+        public override void Content()
+        {
+            EditorGUILayout.BeginVertical();
+
+            GUILayout.Label("选择布局模式", EditorStyles.boldLabel);
+
+            int columns = 4;
+            int rows = 4;
+            ERectTransformMode[,] modeGrid = new ERectTransformMode[4, 4]
+            {
+        { ERectTransformMode.leftBottom, ERectTransformMode.middleBottom, ERectTransformMode.rightBottom, ERectTransformMode.StretchBottom },
+        { ERectTransformMode.leftCenter, ERectTransformMode.middleCenter, ERectTransformMode.rightCenter, ERectTransformMode.StretchCenter },
+        { ERectTransformMode.leftTop, ERectTransformMode.middleTop, ERectTransformMode.rightTop, ERectTransformMode.StretchTop },
+        { ERectTransformMode.leftStretch, ERectTransformMode.middleStretch, ERectTransformMode.rightStretch, ERectTransformMode.stretchStretch },
+            };
+
+            for (int row = 0; row < rows; row++)
+            {
+                EditorGUILayout.BeginHorizontal();
+                for (int col = 0; col < columns; col++)
+                {
+                    ERectTransformMode mode = modeGrid[row, col];
+                    if (GUILayout.Button(mode.ToString(), GUILayout.Width(120), GUILayout.Height(30)))
+                    {
+
+                    }
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+
+            EditorGUILayout.EndVertical();
+        }
+    }
+
+    public class GUIOneCertainSprite : ProductBase
+    {
+        public override ProductBase CreateProduct()
+        {
+            return new GUIOneCertainSprite();
+        }
+        public override void Content()
+        {
+            EditorGUILayout.BeginVertical();
+            // 只有一张图片，是确定的。
+            EditorGUILayout.LabelField("检索到确定的唯一图片路径为：" + spritePath);
+            if (spritePath != "")
+            {
+                Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+                AutoUIUtil.GUIShowSprite(sprite);
+            }
+            EditorGUILayout.EndVertical();
+        }
+        public void SetSpritePath(string spritePath)
+        {
+            this.spritePath = spritePath;
+        }
+        private string spritePath = "";
+    }
+    public class GUIManySpriteCandidate : ProductBase
+    {
+        public string[] spritePaths = null;
+        public int ChooseSpriteoffset=-1;
+        public override ProductBase CreateProduct()
+        {
+            return new GUIManySpriteCandidate();
+        }
+        public override void Content()
+        {
+            EditorGUILayout.BeginVertical();
+            // 有很多图片，是候选的。
+            if (spritePaths != null)
+            {
+                EditorGUILayout.BeginHorizontal();
+                for (int i = 0; i < spritePaths.Length; i++)
+                {
+                    Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePaths[i]);
+                    AutoUIUtil.GUIShowSprite(sprite);
+                    if (GUILayout.Button("选择这个Sprite") && ChooseSpriteoffset!=i){
+                        // 选择这个Sprite
+                        // 发布事件
+                        ChooseSpriteoffset=i;
+                        AutoUIEventManager.GUIManySpriteCandidateEvent.Publish(this,new GUIManySpriteCandidateArgs(spritePaths[i]));
+                    }else{
+                        GUILayout.TextField("已选择这个");
+                    }
+                }
+            }
+            EditorGUILayout.EndVertical();
+        }
+        public void SetSpritePath(string[] spritePaths)
+        {
+            this.spritePaths = spritePaths;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

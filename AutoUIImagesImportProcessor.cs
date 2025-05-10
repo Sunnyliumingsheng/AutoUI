@@ -1,7 +1,9 @@
 
 using System;
+using System.Drawing;
 using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 namespace Assets.Scripts.Tools.Editor.AutoUI
 {
@@ -35,10 +37,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.Log("已经保存文件:" + destFilePath);
                 }
             }
-                    AssetDatabase.Refresh();
-
-
-
+            AssetDatabase.Refresh();
         }
 
         public static bool IsImageExist(string filePath)
@@ -52,11 +51,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static string ParseImageName(string imageName)
         {
             // todo : 写一个名称对应文件夹的匹配树
-            
+
             /*
             这里由于mywar项目的历史遗留问题太重，根本无法做到命名很文件夹之间的一一对应。所以这里全部注释掉。如果以后美术愿意一个个修改名字，就可以
             */
-            
+
             // string[] parts= imageName.Split('_');
             // if(AutoUIConfig.SpriteNameProject1.TryGetValue(parts[0],out string project1)){
             //     switch (project1){
@@ -80,6 +79,30 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
             return "Assets/Images/" + imageName;
         }
+
+        // 导入一张图片 ，图片的路径和想要保存到哪个文件夹
+        public static void ImportImage(string imagePath,string selectedFolderPath)
+        {
+            string fileName = Path.GetFileName(imagePath);
+            string destFilePath = ParseImageName(fileName);
+            string srcImagePath = Path.Combine(selectedFolderPath, fileName);
+            if (!IsImageExist(destFilePath))
+            {
+                File.Copy(imagePath, destFilePath, true);
+            }
+            TextureImporter importer = AssetImporter.GetAtPath(destFilePath) as TextureImporter;
+            if (importer != null)
+            {
+                importer.textureType = TextureImporterType.Sprite;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                AutoUI.imageNameToSpritePath.Add(fileName, destFilePath);
+                importer.SaveAndReimport();
+                AssetDatabase.Refresh();
+                LogUtil.Log("已经保存文件:" + destFilePath);
+            }
+        }
+        // todo添加一个九宫格切图的功能
+
     }
 
 

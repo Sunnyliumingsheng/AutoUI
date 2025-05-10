@@ -49,78 +49,80 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
              image.sprite = sprite;
          } */
 
-        public static void PixelLayerProcessor(Layer layer, GameObject layerGameObject)
-        {
-            /* 请看Main中的导入步骤的注释
-            string imageAssetPath= AutoUIImagesImportProcessor.ParseImageName(layer.name)+".png";
-            if(!AutoUIImagesImportProcessor.IsImageExist(imageAssetPath)){
-                AutoUIException err = new AutoUIException("像素图层的图片依赖引用名称不存在name:"+layer.name+"   imageAssetPath:"+imageAssetPath);
-                LogUtil.LogError(err);
-                return; 
-            }
-            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(imageAssetPath);
-            if(sprite == null){
-                AutoUIException err = new AutoUIException("找不到这个sprite  路径为:"+imageAssetPath);
-                LogUtil.LogError(err);
-                return;
-            }
-            */
-            // 利用unity的搜索功能，看看能找到几个这个名字的Sprite
-            string[] guids = AssetDatabase.FindAssets($"{layer.name} t:Sprite");
-            if (guids.Length == 0)
-            {
-                LogUtil.LogWarning("找不到这个sprite  名字为:" + layer.name);
-                ProductBase gui = GUIManager.CreateGUINotSelectSprite();
-                gui.PutOnLine0();
+        // public static void PixelLayerProcessor(Layer layer, GameObject layerGameObject)
+        // {
+        //     /* 请看Main中的导入步骤的注释
+        //     string imageAssetPath= AutoUIImagesImportProcessor.ParseImageName(layer.name)+".png";
+        //     if(!AutoUIImagesImportProcessor.IsImageExist(imageAssetPath)){
+        //         AutoUIException err = new AutoUIException("像素图层的图片依赖引用名称不存在name:"+layer.name+"   imageAssetPath:"+imageAssetPath);
+        //         LogUtil.LogError(err);
+        //         return; 
+        //     }
+        //     Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(imageAssetPath);
+        //     if(sprite == null){
+        //         AutoUIException err = new AutoUIException("找不到这个sprite  路径为:"+imageAssetPath);
+        //         LogUtil.LogError(err);
+        //         return;
+        //     }
+        //     */
+        //     // 利用unity的搜索功能，看看能找到几个这个名字的Sprite
+        //     string[] guids = AssetDatabase.FindAssets($"{layer.name} t:Sprite");
+        //     if (guids.Length == 0)
+        //     {
+        //         LogUtil.LogWarning("找不到这个sprite  名字为:" + layer.name);
+        //         ProductBase gui = GUIManager.CreateGUINotSelectSprite();
+        //         gui.PutOnLine0();
 
-                AutoUIEventManager.GUINotSelectSpriteEvent.Subscribe((sender, args) =>
-                {
-                    if (args.SkipImportImage)
-                    {
-                        LogUtil.Log("跳过导入图片");
-                    }
-                    else
-                    {
-                        LogUtil.Log("这里是路径" + args.ImageSrcPath + args.ImageDestPath);
-                    }
-                    return;
-                });
+        //         AutoUIEventManager.GUINotSelectSpriteEvent.Subscribe((sender, args) =>
+        //         {
+        //             if (args.SkipImportImage)
+        //             {
+        //                 LogUtil.Log("跳过导入图片");
+        //             }
+        //             else
+        //             {
+        //                 LogUtil.Log("这里是路径" + args.ImageSrcPath + args.ImageDestPath);
+        //             }
+        //             return;
+        //         });
 
-            }
-            if (guids.Length == 1)
-            {
-                LogUtil.Log("找到这个sprite  名字为:" + layer.name);
-                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
-                Texture2D preview = AssetPreview.GetAssetPreview(sprite);
-                if (preview != null)
-                {
-                    GUILayout.Label(preview, GUILayout.Width(64), GUILayout.Height(64));
-                    GUILayout.Label("图片路径: " + path);
-                    GUILayout.Button("确认是这个");
-                }
+        //     }
+        //     if (guids.Length == 1)
+        //     {
+        //         LogUtil.Log("找到这个sprite  名字为:" + layer.name);
+        //         string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+        //         Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+        //         Texture2D preview = AssetPreview.GetAssetPreview(sprite);
+        //         if (preview != null)
+        //         {
+        //             GUILayout.Label(preview, GUILayout.Width(64), GUILayout.Height(64));
+        //             GUILayout.Label("图片路径: " + path);
+        //             GUILayout.Button("确认是这个");
+        //         }
 
-            }
-            if (guids.Length > 1)
-            {
-                LogUtil.Log("找到多个sprite");
-                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
-                Texture2D preview = AssetPreview.GetAssetPreview(sprite);
-                if (preview != null)
-                {
-                    GUILayout.Label(preview, GUILayout.Width(64), GUILayout.Height(64));
-                    GUILayout.Label("图片路径: " + path);
-                    GUILayout.Button("确认是这个");
-                }
-            }
+        //     }
+        //     if (guids.Length > 1)
+        //     {
+        //         LogUtil.Log("找到多个sprite");
+        //         string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+        //         Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+        //         Texture2D preview = AssetPreview.GetAssetPreview(sprite);
+        //         if (preview != null)
+        //         {
+        //             GUILayout.Label(preview, GUILayout.Width(64), GUILayout.Height(64));
+        //             GUILayout.Label("图片路径: " + path);
+        //             GUILayout.Button("确认是这个");
+        //         }
+        //     }
 
 
-            // 添加image
-            Image image = layerGameObject.AddComponent<Image>();
-            //image.sprite = sprite;
-        }
-        public static string[] PixelLayerProcessor0(Layer layer, GameObject layerGameObject)
+        //     // 添加image
+        //     //Image image = layerGameObject.AddComponent<Image>();
+        //     //image.sprite = sprite;
+        // }
+
+        // 检索一下是否有对应的资源，如果没有返回null
+        public static string[] PixelLayerProcessorSelectSpritePath(Layer layer, GameObject layerGameObject)
         {
             string[] guids = AssetDatabase.FindAssets($"{layer.name} t:Sprite");
             if (guids.Length == 0)
@@ -137,10 +139,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 return paths;
             }
         }
-        public static  void OnGUINotSelectSpriteEvent(object sender, GUINotSelectSpriteEventArgs args)
-        {
-            LogUtil.Log("收到GUINotSelectSpriteEvent" + args.SkipImportImage + args.ImageSrcPath + args.ImageDestPath);
+        public static void PixelLayerProcessorAddSprite(GameObject layerGameObject,Sprite sprite){
+            layerGameObject.AddComponent<Image>().sprite = sprite;
         }
+        
         public static void TextLayerProcessor(in Layer layer, ref GameObject layerGameObject)
         {
             // 第一部分，添加TMP

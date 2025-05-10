@@ -92,7 +92,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
         
         
-        
+        // 生成一个GameObject并处理默认的rectTransform信息
         public static GameObject ProcessLayerFramework(in Layer layer,ref GameObject parent)
         {
                 Transform parentTransform=parent.transform;

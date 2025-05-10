@@ -7,22 +7,28 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 {
     public class AutoUIEventManager
     {
-        public static readonly GUINotSelectSpriteEventPublisher GUINotSelectSpriteEvent = new GUINotSelectSpriteEventPublisher();
+        public static readonly EventPublisher<GUINotSelectSpriteEventArgs> GUINotSelectSpriteEvent = new EventPublisher<GUINotSelectSpriteEventArgs>();
+        public static readonly EventPublisher<GUIChooseNewRectTransformArgs> GUIChooseNewRectTransformEvent = new EventPublisher<GUIChooseNewRectTransformArgs>();
+        public static readonly EventPublisher<GUIConfirmArgs> GUIConfirmEvent = new EventPublisher<GUIConfirmArgs>();
+        public static readonly EventPublisher<GUIManySpriteCandidateArgs> GUIManySpriteCandidateEvent= new EventPublisher<GUIManySpriteCandidateArgs>(); 
     }
 
 
-    public class GUINotSelectSpriteEventPublisher : EventArgs
+    public class EventPublisher<T> where T : EventArgs
     {
-        public event EventHandler<GUINotSelectSpriteEventArgs> _event;
-        public void Publish(object sender, GUINotSelectSpriteEventArgs e)
+        private event EventHandler<T> _event;
+
+        public void Publish(object sender, T args)
         {
-            _event?.Invoke(sender, e);
+            _event?.Invoke(sender, args);
         }
-        public void Subscribe(EventHandler<GUINotSelectSpriteEventArgs> callback)
+
+        public void Subscribe(EventHandler<T> callback)
         {
             _event += callback;
         }
-        public void Unsubscribe(EventHandler<GUINotSelectSpriteEventArgs> callback)
+
+        public void Unsubscribe(EventHandler<T> callback)
         {
             _event -= callback;
         }
@@ -40,6 +46,25 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
     }
 
+    public class GUIChooseNewRectTransformArgs : EventArgs
+    {
+        public ERectTransformMode mode;
+        public GUIChooseNewRectTransformArgs(ERectTransformMode mode)
+        {
+            this.mode = mode;
+        }
+    }
+    public class GUIConfirmArgs:EventArgs{
+       public bool confirm;
+       public bool cut;
+    }
+
+    public class GUIManySpriteCandidateArgs:EventArgs{
+        public string newPath;
+        public GUIManySpriteCandidateArgs(string newPath){
+            this.newPath=newPath;
+        }
+    }
 
 
 

@@ -26,6 +26,21 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     {
         middleCenter,
         stretchStretch,
+        leftTop,
+        leftCenter,
+        leftBottom,
+        leftStretch,
+        middleTop,
+        middleBottom,
+        middleStretch,
+        rightTop,
+        rightCenter,
+        rightBottom,
+        rightStretch,
+        StretchTop,
+        StretchCenter,
+        StretchBottom
+        
     }
 
 

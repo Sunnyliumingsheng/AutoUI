@@ -24,39 +24,15 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             LogUtil.Log("json:"+json);
             config= JsonConvert.DeserializeObject<AutoUIConfigData>(json);
         }
-        // 这个是一个字典，对第二位的字符串进行处理
-        public static Dictionary<string,string> SpriteNameProject2SP=new Dictionary<string, string>(){
-            {"Alliance","Alliance"},
-            {"Archive","Archive"},
-            {"BeiBao","Bag"},
-            {"Battle","Battle"},
-            {"City","City"},
-            {"Cmn","Common"},
-            {"Guide","Dialog"},
-            {"Equip","Equip"},
-            {"Head","Head"},
-            {"Hero","Hero"},
-            {"Icon","Icon"},
-            {"Loading","Loading"},
-            {"Main","Main"},
-            {"Building","MainCity"},
-            {"technology","Technology"},
-            {"Mission","Mission"},
-            {"Store","Store"},
-            {"Itelligence","WatchTower"},
-            {"World","World"}
-        };
-        // 特殊的文件夹，CommonBg BigImage 
-        public static Dictionary<string,string> SpriteNameProject1=new Dictionary<string, string>(){
-            {"SP","Sprites"},
-            {"HUD","HUD"},
-        };
+
     }
     [System.Serializable]
     public class AutoUIConfigData
     {
         public TextConfigData text;
         public SpriteConfigData sprite;
+
+        public PreviewSpriteSize previewSpriteSize;
     }
 
     [System.Serializable]
@@ -68,5 +44,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     [System.Serializable]
     public class SpriteConfigData{
         public string spritePath;
+    }
+    [System.Serializable]
+    public class PreviewSpriteSize{
+        public int width;
+        public int height;
     }
 }
