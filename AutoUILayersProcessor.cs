@@ -1,4 +1,5 @@
 
+using Framework;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -48,18 +49,24 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         public static void PixelLayerProcessor(in Layer layer, ref GameObject layerGameObject)
         {
-            string imageAssetPath= AutoUIImagesImportProcessor.ParseImageName(layer.name)+".png";
-            if(!AutoUIImagesImportProcessor.IsImageExist(imageAssetPath)){
-                AutoUIException err = new AutoUIException("像素图层的图片依赖引用名称不存在name:"+layer.name+"   imageAssetPath:"+imageAssetPath);
-                LogUtil.LogError(err);
-                return; 
-            }
-            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(imageAssetPath);
-            if(sprite == null){
-                AutoUIException err = new AutoUIException("找不到这个sprite  路径为:"+imageAssetPath);
-                LogUtil.LogError(err);
+            Sprite sprite=null;
+            FindSpriteResult findSpriteResult = AutoUIAssets.GetSprite(layer.name);
+            if (findSpriteResult.status== EFindAssetStatus.cantFind){
+                LogUtil.LogWarning("获取Sprite失败:"+layer.name);
                 return;
             }
+            if (findSpriteResult.status== EFindAssetStatus.manyResult){
+                LogUtil.LogWarning("获取到多个Sprite已经默认采用第一个搜索到的Sprite:"+layer.name);
+                sprite=findSpriteResult.manyResult[0].sprite;
+            }
+            if (findSpriteResult.status== EFindAssetStatus.oneResult){
+                sprite=findSpriteResult.oneResult.sprite; 
+            }
+            if (sprite==null){
+                LogUtil.LogError("Sprite为空:"+layer.name);
+                return; 
+            }
+            
             // 添加image
             Image image = layerGameObject.AddComponent<Image>();
             image.sprite = sprite;

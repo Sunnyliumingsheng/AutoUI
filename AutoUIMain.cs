@@ -71,11 +71,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.LogError(err);
                     return;
                 }
-                LogUtil.Log("=== 导入图片 ===");
+                LogUtil.Log("=== 搜索Sprite ===");
                 try
                 {
-                    AutoUIImagesImportProcessor.ImageImportProcessor(selectedFolderPath);
-                    LogUtil.Log("导入全部图片");
+                    AutoUIAssets.InitAssets(layers);
+                    LogUtil.Log("获取Sprite完成");
                 }
                 catch (AutoUIException err)
                 {
