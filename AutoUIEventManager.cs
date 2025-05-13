@@ -2,6 +2,7 @@
 
 using System;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Assets.Scripts.Tools.Editor.AutoUI
 {
@@ -11,6 +12,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static readonly EventPublisher<GUIChooseNewRectTransformArgs> GUIChooseNewRectTransformEvent = new EventPublisher<GUIChooseNewRectTransformArgs>();
         public static readonly EventPublisher<GUIConfirmArgs> GUIConfirmEvent = new EventPublisher<GUIConfirmArgs>();
         public static readonly EventPublisher<GUIManySpriteCandidateArgs> GUIManySpriteCandidateEvent= new EventPublisher<GUIManySpriteCandidateArgs>(); 
+        public static readonly EventPublisher<GUIOneCertainSpriteArgs> GUIOneCertainSpriteEvent = new EventPublisher<GUIOneCertainSpriteArgs>();
     }
 
 
@@ -65,7 +67,12 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             this.newPath=newPath;
         }
     }
-
+    public class GUIOneCertainSpriteArgs:EventArgs{
+        public Sprite sprite;
+        public GUIOneCertainSpriteArgs(Sprite sprite){
+            this.sprite=sprite; 
+        }
+    }
 
 
 

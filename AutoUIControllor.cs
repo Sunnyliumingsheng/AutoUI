@@ -61,7 +61,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
                     string srcPath = null; // 选择的图片路径
                     string destPath = null; // 选择的导入路径
-                    string chooseSpritePath ="";
+                    string chooseSpritePath = "";
 
                     void OnGUINotSelectSpriteEvent(object sender, GUINotSelectSpriteEventArgs args)
                     {
@@ -76,13 +76,26 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                             destPath = args.ImageDestPath;
                         }
                     }
-                    void OnGUIManySpriteCandidateEvent(object sender,GUIManySpriteCandidateArgs  args){
-                        
-                        chooseSpritePath=args.newPath;
-                        pixelState=PixelState.ChooseNewSprite;
+                    void OnGUIManySpriteCandidateEvent(object sender, GUIManySpriteCandidateArgs args)
+                    {
+                        chooseSpritePath = args.newPath;
+                        pixelState = PixelState.ChooseNewSprite;
                     }
-                    void OnGUILayerConfirm(object sender,GUILayerConfirmArgs args){
-                        pixelState=PixelState.exit;
+                    void OnGUILayerConfirm(object sender, GUIConfirmArgs args)
+                    {
+                        pixelState = PixelState.exit;
+                    }
+                    void OnGUIChooseNewRectTransform(object sender, GUIChooseNewRectTransformArgs args)
+                    {
+                        AutoUIRectTransformProcessor.UpdateRectTransformProcessor(ref layerGameObject, args.mode);
+                    }
+                    void OnGUIOneCertainSpriteEvent(object sender, GUIOneCertainSpriteArgs args)
+                    {
+                        Sprite sprite = args.sprite;
+                        AutoUI.MainThread.Run(() =>
+                        {
+                            AutoUILayersProcessor.PixelLayerProcessorAddSprite(layerGameObject, sprite);
+                        });
                     }
 
                     // 请求搜索功能搜索到图片资源的位置
@@ -96,9 +109,20 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     ProductBase guiChangeRectTransform = GUIManager.CreateGUIRectTransformMode();
                     ProductBase guiNotSelectSprite = GUIManager.CreateGUINotSelectSprite();
                     ProductBase guiOneCertainSprite = GUIManager.CreateGUIOneCertainSprite();
-                    ProductBase guiManySpriteCandidate= GUIManager.CreateGUIManySpriteCandidate();
+                    ProductBase guiManySpriteCandidate = GUIManager.CreateGUIManySpriteCandidate();
                     ProductBase guiLayerConfirm = GUIManager.CreateGUILayerConfirm();
                     guiChangeRectTransform.PutOnLine0();
+                    guiLayerConfirm.PutOnLine4();
+
+                    AutoUIEventManager.GUIConfirmEvent.Subscribe(OnGUILayerConfirm);
+                    AutoUIEventManager.GUIChooseNewRectTransformEvent.Subscribe(OnGUIChooseNewRectTransform);
+
+                    // todo : 添加功能到这里
+                    // 默认是这个
+                    if (guiChangeRectTransform is GUIRectTransformMode isGuiChangeRectTransform)
+                    {
+                        isGuiChangeRectTransform.SetOriginRectTransform(ERectTransformMode.middleCenter);
+                    }
 
                     if (paths == null)
                     {   // 让用户自行选择是否需要导入图片
@@ -111,7 +135,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                         {
                             // 有一个确切的图片资源，直接使用即可
                             guiOneCertainSprite.PutOnLine1();
-                            if(guiOneCertainSprite is GUIOneCertainSprite gui){
+                            AutoUIEventManager.GUIOneCertainSpriteEvent.Subscribe(OnGUIOneCertainSpriteEvent);
+                            if (guiOneCertainSprite is GUIOneCertainSprite gui)
+                            {
                                 gui.SetSpritePath(paths[0]);
                             }
                         }
@@ -120,8 +146,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                             // 有多个图片资源，需要用户进行选择
                             guiManySpriteCandidate.PutOnLine1();
                             AutoUIEventManager.GUIManySpriteCandidateEvent.Subscribe(OnGUIManySpriteCandidateEvent);
-                            if(guiManySpriteCandidate is GUIManySpriteCandidate gui){
-                                gui.SetSpritePath(paths);
+                            if (guiManySpriteCandidate is GUIManySpriteCandidate isGUIManySpriteCandidate)
+                            {
+                                isGUIManySpriteCandidate.SetSpritePath(paths);
                             }
                         }
                     }
@@ -135,11 +162,17 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                                 break;
                             case PixelState.exit:
                                 AutoUIEventManager.GUINotSelectSpriteEvent.Unsubscribe(OnGUINotSelectSpriteEvent);
+                                AutoUIEventManager.GUIManySpriteCandidateEvent.Unsubscribe(OnGUIManySpriteCandidateEvent);
+                                AutoUIEventManager.GUIConfirmEvent.Unsubscribe(OnGUILayerConfirm);
+                                AutoUIEventManager.GUIChooseNewRectTransformEvent.Unsubscribe(OnGUIChooseNewRectTransform);
+                                AutoUIEventManager.GUIOneCertainSpriteEvent.Subscribe(OnGUIOneCertainSpriteEvent);
+
 
                                 guiOneCertainSprite.Destroy();
                                 guiManySpriteCandidate.Destroy();
                                 guiChangeRectTransform.Destroy();
                                 guiNotSelectSprite.Destroy();
+                                guiLayerConfirm.Destroy();
                                 return;
                             case PixelState.SkipImportImage:
                                 // todo : 有空思考一下如何处理
@@ -154,11 +187,12 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                                 pixelState = PixelState.idle;
                                 break;
                             case PixelState.ChooseNewSprite:
-                                AutoUI.MainThread.Run(()=>{
-                                    Sprite sprite=AssetDatabase.LoadAssetAtPath<Sprite>(chooseSpritePath);
-                                    AutoUILayersProcessor.PixelLayerProcessorAddSprite(layerGameObject,sprite);
+                                AutoUI.MainThread.Run(() =>
+                                {
+                                    Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(chooseSpritePath);
+                                    AutoUILayersProcessor.PixelLayerProcessorAddSprite(layerGameObject, sprite);
                                 });
-                                pixelState=PixelState.idle;
+                                pixelState = PixelState.idle;
                                 break;
                         }
                     }

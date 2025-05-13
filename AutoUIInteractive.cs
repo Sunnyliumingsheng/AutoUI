@@ -224,6 +224,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             if (GUILayout.Button("确认"))
             {
                 // 发布事件
+                AutoUIEventManager.GUIConfirmEvent.Publish(this, new GUIConfirmArgs());
             }
 
             EditorGUILayout.EndVertical();
@@ -278,15 +279,26 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 for (int col = 0; col < columns; col++)
                 {
                     ERectTransformMode mode = modeGrid[row, col];
+                    if (mode == originMode)
+                    {
+                        GUILayout.TextField("已经选择" + mode.ToString(), GUILayout.Width(120), GUILayout.Height(30));
+                        continue;
+                    }
                     if (GUILayout.Button(mode.ToString(), GUILayout.Width(120), GUILayout.Height(30)))
                     {
-
+                        AutoUIEventManager.GUIChooseNewRectTransformEvent.Publish(this, new GUIChooseNewRectTransformArgs(mode));
+                        originMode = mode;
                     }
                 }
                 EditorGUILayout.EndHorizontal();
             }
 
             EditorGUILayout.EndVertical();
+        }
+        private ERectTransformMode originMode = ERectTransformMode.middleCenter;
+        public void SetOriginRectTransform(ERectTransformMode eRectTransformMode)
+        {
+            this.originMode = eRectTransformMode;
         }
     }
 
@@ -305,6 +317,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             {
                 Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
                 AutoUIUtil.GUIShowSprite(sprite);
+                AutoUIEventManager.GUIOneCertainSpriteEvent.Publish(this, new GUIOneCertainSpriteArgs(sprite));
             }
             EditorGUILayout.EndVertical();
         }
@@ -317,33 +330,38 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     public class GUIManySpriteCandidate : ProductBase
     {
         public string[] spritePaths = null;
-        public int ChooseSpriteoffset=-1;
+        public int ChooseSpriteoffset = -1;
         public override ProductBase CreateProduct()
         {
             return new GUIManySpriteCandidate();
         }
         public override void Content()
         {
-            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
             // 有很多图片，是候选的。
             if (spritePaths != null)
             {
-                EditorGUILayout.BeginHorizontal();
                 for (int i = 0; i < spritePaths.Length; i++)
                 {
                     Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePaths[i]);
                     AutoUIUtil.GUIShowSprite(sprite);
-                    if (GUILayout.Button("选择这个Sprite") && ChooseSpriteoffset!=i){
-                        // 选择这个Sprite
-                        // 发布事件
-                        ChooseSpriteoffset=i;
-                        AutoUIEventManager.GUIManySpriteCandidateEvent.Publish(this,new GUIManySpriteCandidateArgs(spritePaths[i]));
-                    }else{
+                    if (ChooseSpriteoffset != i)
+                    {
+                        if (GUILayout.Button("选择这个Sprite"))
+                        {
+                            // 选择这个Sprite
+                            // 发布事件
+                            ChooseSpriteoffset = i;
+                            AutoUIEventManager.GUIManySpriteCandidateEvent.Publish(this, new GUIManySpriteCandidateArgs(spritePaths[i]));
+                        }
+                    }
+                    else
+                    {
                         GUILayout.TextField("已选择这个");
                     }
                 }
             }
-            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndHorizontal();
         }
         public void SetSpritePath(string[] spritePaths)
         {
