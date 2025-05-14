@@ -70,6 +70,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             // 添加image
             Image image = layerGameObject.AddComponent<Image>();
             image.sprite = sprite;
+            if(sprite.border!=Vector4.zero){
+                image.type = Image.Type.Sliced;
+            }
         }
         public static void TextLayerProcessor(in Layer layer, ref GameObject layerGameObject)
         {
