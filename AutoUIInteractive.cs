@@ -54,8 +54,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     // 产品的抽象基类，提供默认实现
     public abstract class ProductBase
     {
-        protected static bool isShow=true;
-        public static int lineOffset = -1;
+        protected  bool isShow=true;
+        public  int lineOffset = -1;
 
         public void PutOnLine1()
         {
@@ -89,17 +89,17 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         public void Show()
         {
-            ProductBase.isShow = true;
+            isShow = true;
         }
 
         public void Hide()
         {
-            ProductBase.isShow = false;
+            isShow = false;
         }
 
         public void Destroy()
         {
-            switch (ProductBase.lineOffset)
+            switch (lineOffset)
             {
                 case 0: AutoUIBoard.line0 = null; break;
                 case 1: AutoUIBoard.line1 = null; break;
@@ -111,7 +111,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         public bool IsShow()
         {
-            return ProductBase.isShow;
+            return isShow;
         }
 
         public abstract void Content();
@@ -225,9 +225,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             {
                 // 发布事件
                 AutoUIEventManager.GUILayerConfirmEvent.Publish(this, new GUILayerConfirmArgs());
-            }
-            if (GUILayout.Button("安全退出")){
-                AutoUIEventManager.GUISafeExitEvent.Publish(this, new GUISafeExitArgs());
             }
 
             EditorGUILayout.EndVertical();

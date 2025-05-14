@@ -1,6 +1,7 @@
 // 从这个版本开始，脚本就是正式版本，由我阳小帅来编写，并且确保良好的结构。高可扩展性
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;

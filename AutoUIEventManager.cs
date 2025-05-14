@@ -12,7 +12,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static readonly EventPublisher<GUIChooseNewRectTransformArgs> GUIChooseNewRectTransformEvent = new EventPublisher<GUIChooseNewRectTransformArgs>();
         public static readonly EventPublisher<GUILayerConfirmArgs> GUILayerConfirmEvent = new EventPublisher<GUILayerConfirmArgs>();
         public static readonly EventPublisher<GUIManySpriteCandidateArgs> GUIManySpriteCandidateEvent= new EventPublisher<GUIManySpriteCandidateArgs>(); 
-        public static readonly EventPublisher<GUISafeExitArgs> GUISafeExitEvent= new EventPublisher<GUISafeExitArgs>();
     }
 
 
@@ -66,8 +65,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public GUIManySpriteCandidateArgs(Sprite newSprite){
             this.SelectSprite=newSprite;
         }
-    }
-    public class GUISafeExitArgs:EventArgs{
     }
 
 
