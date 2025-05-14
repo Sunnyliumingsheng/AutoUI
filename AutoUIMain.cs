@@ -17,7 +17,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static string selectedFolderPath;
         public static string selectedJsonPath;
         public static Thread controllor;
-        public static bool isRunning=false;
+        public static bool isRunning = false;
         public static GameObject prefabGameObjec;
         public static AutoUIMainThreadDispatcher MainThread;
         public static Layer layers;
@@ -118,12 +118,18 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 {
                     GameObject canvasObj = AutoUIFrameworkProcesser.CreateCanvasWithData(layers);
                     // 新建一个线程
-                    isRunning=true;
+                    isRunning = true;
                     controllor = new Thread(() =>
                    {
                        LogUtil.Log("hello , 成功开启了一个线程");
                        AutoUIControllor.MainControllor(layers, canvasObj);
                        LogUtil.Log("成功退出了线程");
+                       // 重新保存一下这个prefab
+                       MainThread.Run(() =>
+                       {
+                           AutoUIFile.SavePrefabAndCleanup(canvasObj);
+                       });
+                       LogUtil.Log("重新保存prefab");
                    });
                     controllor.Start();
                 }
