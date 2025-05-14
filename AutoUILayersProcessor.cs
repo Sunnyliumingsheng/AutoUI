@@ -178,7 +178,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
         private static void PixelLayerGameObjectAddSprite(GameObject gameObject, Sprite sprite)
         {
-            Image image=gameObject.AddComponent<Image>();
+            Image image = gameObject.AddComponent<Image>();
             image.sprite = sprite;
             if (sprite.border != Vector4.zero)
             {
@@ -189,9 +189,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
 
 
-        public static void TextLayerProcessor(in Layer layer, ref GameObject layerGameObject)
+        public static void TextLayerProcessor( Layer layer, GameObject layerGameObject)
         {
-            // 第一部分，添加TMP
+            AutoUI.MainThread.Run(()=>{
+                // 第一部分，添加TMP
             TextMeshProUGUI tmp = layerGameObject.AddComponent<TextMeshProUGUI>();
             tmp.text = layer.textLayerData.text;
             // todo : 寻找到一个合适的字体转化关系函数。并进行使用
@@ -213,6 +214,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             var field = typeof(LocalizationText_TMP).GetField("mLabel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             field.SetValue(localizationTextTMP, tmp);
             EditorUtility.SetDirty(localizationTextTMP);
+            });
 
         }
 
