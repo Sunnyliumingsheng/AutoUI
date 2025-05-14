@@ -14,11 +14,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static void MainControllor(Layer layers, GameObject canvasObj)
         {
             // 开始进行遍历
-            SafeExit();
             RecursiveProcess(layers.layers, canvasObj);
         }
         private static void RecursiveProcess(List<Layer> layers, GameObject parent)
         {
+            if(checkExit())return;
             foreach (var layer in layers)
             {
                 var task = AutoUI.MainThread.AsyncRun<GameObject>(() =>
@@ -30,22 +30,33 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 {
                     // 在PS中为Group意味着下面还有东西，并且由于group图层没有任何图片文字信息所以除了rectTransfrom之外不需要处理
                     RecursiveProcess(layer.layers, layerGameObject);
+                    if(checkExit())return;
                 }
                 if (layer.eLayerKind == ELayerKind.pixel)
                 {
                     AutoUILayersProcessor.PixelLayerProcessor(layer, layerGameObject);
+                    if(checkExit())return;
                 }
 
             }
         }
-        public static void SafeExit()
+        public static bool checkExit()
         {
-            AutoUIEventManager.GUISafeExitEvent.Subscribe((sender, args) =>
-            {
-                AutoUI.controllor.Abort();
-                UnityEditor.EditorApplication.ExitPlaymode();
-            });
+            return !AutoUI.isRunning;
         }
+        public static void exit(){
+            AutoUI.isRunning=false;
+        }
+        /*
+            用法解析
+            检查子函数是否想要退出
+            if(checkExit())return;
+
+            自己想要退出
+            exit();return;
+
+
+        */
 
 
     }

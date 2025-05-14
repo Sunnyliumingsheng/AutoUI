@@ -138,6 +138,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                         switch (pixelState)
                         {
                             case PixelState.idle:
+                                if(AutoUIControllor.checkExit())return;
                                 break;
                             case PixelState.exit:
                                 AutoUIEventManager.GUINotFindSpriteEvent.Unsubscribe(OnGUINotFindSpriteEvent);

@@ -42,32 +42,32 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             // 设置Canvas大小
             UnityEngine.RectTransform canvasRect = canvasObj.GetComponent<UnityEngine.RectTransform>();
             canvasRect.sizeDelta = new Vector2(layers.canvasLayerData.width, layers.canvasLayerData.height);
-            var prefabPath= AutoUIFile.SavePrefabAndCleanup(canvasObj);
-            canvasObj=AutoUIUtil.OpenPrefabByPath(prefabPath);
+            var prefabPath = AutoUIFile.SavePrefabAndCleanup(canvasObj);
+            canvasObj = AutoUIUtil.OpenPrefabByPath(prefabPath);
 
-            
+
             return canvasObj;
         }
-        
-        
+
+
         // 生成一个GameObject并处理默认的rectTransform信息
-        public static GameObject ProcessLayerFramework(in Layer layer,ref GameObject parent)
+        public static GameObject ProcessLayerFramework(in Layer layer, ref GameObject parent)
         {
-                Transform parentTransform=parent.transform;
-                GameObject layerGameObject = new GameObject(layer.name);
-                layerGameObject.transform.SetParent(parentTransform);
-                UnityEngine.RectTransform rectTransform = layerGameObject.AddComponent<UnityEngine.RectTransform>();
-                // 处理rectTransform
-                if (layer.rectTransform != null)
-                {
-                    AutoUIRectTransformProcessor.RectTransformProcessor(ref rectTransform,in layer.rectTransform);
-                }
-                else
-                {
-                    AutoUIException err = new("出现错误,遇到rectTransform为null的情况");
-                    LogUtil.LogError(err);
-                }
-                return layerGameObject;
+            Transform parentTransform = parent.transform;
+            GameObject layerGameObject = new GameObject(layer.name);
+            layerGameObject.transform.SetParent(parentTransform);
+            UnityEngine.RectTransform rectTransform = layerGameObject.AddComponent<UnityEngine.RectTransform>();
+            // 处理rectTransform
+            if (layer.rectTransform != null)
+            {
+                AutoUIRectTransformProcessor.RectTransformProcessor(ref rectTransform, in layer.rectTransform);
+            }
+            else
+            {
+                AutoUIException err = new("出现错误,遇到rectTransform为null的情况");
+                LogUtil.LogError(err);
+            }
+            return layerGameObject;
         }
 
 
