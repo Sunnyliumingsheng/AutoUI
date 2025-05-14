@@ -138,7 +138,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                         switch (pixelState)
                         {
                             case PixelState.idle:
-                                if(AutoUIControllor.checkExit())return;
+                                if (AutoUIControllor.checkExit()) return;
                                 break;
                             case PixelState.exit:
                                 AutoUIEventManager.GUINotFindSpriteEvent.Unsubscribe(OnGUINotFindSpriteEvent);
@@ -178,7 +178,13 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
         private static void PixelLayerGameObjectAddSprite(GameObject gameObject, Sprite sprite)
         {
-            gameObject.AddComponent<Image>().sprite = sprite;
+            Image image=gameObject.AddComponent<Image>();
+            image.sprite = sprite;
+            if (sprite.border != Vector4.zero)
+            {
+                // 这是九宫格
+                image.type = Image.Type.Sliced;
+            }
         }
 
 
