@@ -8,11 +8,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 {
     public class AutoUIEventManager
     {
-        public static readonly EventPublisher<GUINotSelectSpriteEventArgs> GUINotSelectSpriteEvent = new EventPublisher<GUINotSelectSpriteEventArgs>();
+        public static readonly EventPublisher<GUINotFindSpriteEventArgs> GUINotFindSpriteEvent = new EventPublisher<GUINotFindSpriteEventArgs>();
         public static readonly EventPublisher<GUIChooseNewRectTransformArgs> GUIChooseNewRectTransformEvent = new EventPublisher<GUIChooseNewRectTransformArgs>();
-        public static readonly EventPublisher<GUIConfirmArgs> GUIConfirmEvent = new EventPublisher<GUIConfirmArgs>();
+        public static readonly EventPublisher<GUILayerConfirmArgs> GUILayerConfirmEvent = new EventPublisher<GUILayerConfirmArgs>();
         public static readonly EventPublisher<GUIManySpriteCandidateArgs> GUIManySpriteCandidateEvent= new EventPublisher<GUIManySpriteCandidateArgs>(); 
-        public static readonly EventPublisher<GUIOneCertainSpriteArgs> GUIOneCertainSpriteEvent = new EventPublisher<GUIOneCertainSpriteArgs>();
+        public static readonly EventPublisher<GUISafeExitArgs> GUISafeExitEvent= new EventPublisher<GUISafeExitArgs>();
     }
 
 
@@ -35,12 +35,12 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             _event -= callback;
         }
     }
-    public class GUINotSelectSpriteEventArgs : EventArgs
+    public class GUINotFindSpriteEventArgs : EventArgs
     {
         public bool SkipImportImage;
         public string ImageSrcPath;
         public string ImageDestPath;
-        public GUINotSelectSpriteEventArgs(bool skipImportImage, string imageSrcPath, string imageDestPath)
+        public GUINotFindSpriteEventArgs(bool skipImportImage, string imageSrcPath, string imageDestPath)
         {
             SkipImportImage = skipImportImage;
             ImageSrcPath = imageSrcPath;
@@ -56,23 +56,20 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             this.mode = mode;
         }
     }
-    public class GUIConfirmArgs:EventArgs{
+    public class GUILayerConfirmArgs:EventArgs{
        public bool confirm;
        public bool cut;
     }
 
     public class GUIManySpriteCandidateArgs:EventArgs{
-        public string newPath;
-        public GUIManySpriteCandidateArgs(string newPath){
-            this.newPath=newPath;
+        public Sprite SelectSprite;
+        public GUIManySpriteCandidateArgs(Sprite newSprite){
+            this.SelectSprite=newSprite;
         }
     }
-    public class GUIOneCertainSpriteArgs:EventArgs{
-        public Sprite sprite;
-        public GUIOneCertainSpriteArgs(Sprite sprite){
-            this.sprite=sprite; 
-        }
+    public class GUISafeExitArgs:EventArgs{
     }
+
 
 
 

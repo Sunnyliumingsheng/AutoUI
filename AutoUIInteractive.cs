@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using BZTA;
-
+// 提供交互组件，只需要创建完成之后PutOnLine就能展示，记得最后Destroy。设置值的方式是SetValue，返回值的方式是通过时间的回调。
 namespace Assets.Scripts.Tools.Editor.AutoUI
 {
     // 编辑器窗口类，用来处理交互，是一个巨大的状态机
@@ -10,15 +10,26 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         // 实际上这个方式性能最好，而且还很可控，比如，你想始终将确认按钮放在下面，丢到最下面就好。不想要了直接destory.不必繁琐的逻辑，只要记得这件事，但是总共就这么点，而且逻辑在类里面。
         public static void Interactice()
         {
-            AutoUIBoard.line0?.Content();
+            if(AutoUIBoard.line0!=null && AutoUIBoard.line0.IsShow()){
+                AutoUIBoard.line0.Content();
+            }
             DrawLine();
-            AutoUIBoard.line1?.Content();
+            if(AutoUIBoard.line1!=null && AutoUIBoard.line1.IsShow()){
+                AutoUIBoard.line1.Content(); 
+            }
             DrawLine();
-            AutoUIBoard.line2?.Content();
+            if(AutoUIBoard.line2!=null && AutoUIBoard.line2.IsShow()){
+                AutoUIBoard.line2.Content();
+            }
             DrawLine();
-            AutoUIBoard.line3?.Content();
+            if(AutoUIBoard.line3!=null && AutoUIBoard.line3.IsShow()){
+                AutoUIBoard.line3.Content();
+            }
             DrawLine();
-            AutoUIBoard.line4?.Content();
+            if(AutoUIBoard.line4!=null && AutoUIBoard.line4.IsShow()){
+                AutoUIBoard.line4.Content(); 
+            }
+            DrawLine();
         }
 
         private static void DrawLine()
@@ -43,7 +54,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     // 产品的抽象基类，提供默认实现
     public abstract class ProductBase
     {
-        protected static bool isShow;
+        protected static bool isShow=true;
         public static int lineOffset = -1;
 
         public void PutOnLine1()
@@ -104,7 +115,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
 
         public abstract void Content();
-        public abstract ProductBase CreateProduct();
     }
 
     // 用于创建产品的管理类
@@ -112,7 +122,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     {
         public static ProductBase CreateGUINotSelectSprite()
         {
-            return new GUINotSelectSprite();
+            return new GUINotFindSprite();
         }
         public static ProductBase CreateGUILayerConfirm()
         {
@@ -133,16 +143,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     }
 
     // 产品类，继承ProductBase，管理事件
-    public class GUINotSelectSprite : ProductBase
+    public class GUINotFindSprite : ProductBase
     {
         string srcPath = "";
         string destPath = "";
-
-        public override ProductBase CreateProduct()
-        {
-            var product = new GUINotSelectSprite();
-            return product;
-        }
 
         public override void Content()
         {
@@ -151,7 +155,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
             if (GUILayout.Button("跳过导入图片"))
             {
-                AutoUIEventManager.GUINotSelectSpriteEvent.Publish(this, new GUINotSelectSpriteEventArgs(true, "", ""));
+                AutoUIEventManager.GUINotFindSpriteEvent.Publish(this, new GUINotFindSpriteEventArgs(true, "", ""));
             }
 
             if (srcPath == "")
@@ -162,7 +166,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     if (srcPath == "")
                     {
                         LogUtil.AddWarning("没有成功选择图片");
-                        AutoUIEventManager.GUINotSelectSpriteEvent.Publish(this, new GUINotSelectSpriteEventArgs(true, "", ""));
+                        AutoUIEventManager.GUINotFindSpriteEvent.Publish(this, new GUINotFindSpriteEventArgs(true, "", ""));
                         return;
                     }
 
@@ -177,7 +181,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     if (srcPath == "")
                     {
                         LogUtil.AddWarning("没有成功选择图片");
-                        AutoUIEventManager.GUINotSelectSpriteEvent.Publish(this, new GUINotSelectSpriteEventArgs(true, "", ""));
+                        AutoUIEventManager.GUINotFindSpriteEvent.Publish(this, new GUINotFindSpriteEventArgs(true, "", ""));
                         return;
                     }
 
@@ -204,7 +208,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             {
                 if (GUILayout.Button("确定导入"))
                 {
-                    AutoUIEventManager.GUINotSelectSpriteEvent.Publish(this, new GUINotSelectSpriteEventArgs(false, srcPath, destPath));
+                    AutoUIEventManager.GUINotFindSpriteEvent.Publish(this, new GUINotFindSpriteEventArgs(false, srcPath, destPath));
                 }
             }
 
@@ -214,28 +218,24 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     // 普通图层可以选择这个
     public class GUILayerConfirm : ProductBase
     {
-        public override ProductBase CreateProduct()
-        {
-            return new GUILayerConfirm();
-        }
         public override void Content()
         {
             EditorGUILayout.BeginVertical();
             if (GUILayout.Button("确认"))
             {
                 // 发布事件
-                AutoUIEventManager.GUIConfirmEvent.Publish(this, new GUIConfirmArgs());
+                AutoUIEventManager.GUILayerConfirmEvent.Publish(this, new GUILayerConfirmArgs());
+            }
+            if (GUILayout.Button("安全退出")){
+                AutoUIEventManager.GUISafeExitEvent.Publish(this, new GUISafeExitArgs());
             }
 
             EditorGUILayout.EndVertical();
         }
     }
+    // 对于有小组图层，有时候要用到剪枝，但是我现在认为暂时不支持是更明知的选择
     public class GUIGroupConfirm : ProductBase
     {
-        public override ProductBase CreateProduct()
-        {
-            return new GUIGroupConfirm();
-        }
         public override void Content()
         {
             EditorGUILayout.BeginVertical();
@@ -247,22 +247,16 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             {
 
             }
-
             EditorGUILayout.EndVertical();
         }
     }
+    // 选择布局模式
     public class GUIRectTransformMode : ProductBase
     {
-        public override ProductBase CreateProduct()
-        {
-            return new GUIRectTransformMode();
-        }
         public override void Content()
         {
             EditorGUILayout.BeginVertical();
-
             GUILayout.Label("选择布局模式", EditorStyles.boldLabel);
-
             int columns = 4;
             int rows = 4;
             ERectTransformMode[,] modeGrid = new ERectTransformMode[4, 4]
@@ -302,49 +296,39 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
     }
 
+    // 像素图层找到了确定的Sprite，可以直接使用，这里只作为展示功能。
     public class GUIOneCertainSprite : ProductBase
     {
-        public override ProductBase CreateProduct()
-        {
-            return new GUIOneCertainSprite();
-        }
         public override void Content()
         {
             EditorGUILayout.BeginVertical();
             // 只有一张图片，是确定的。
-            EditorGUILayout.LabelField("检索到确定的唯一图片路径为：" + spritePath);
-            if (spritePath != "")
+            EditorGUILayout.LabelField("检索到确定的唯一Sprite");
+            if (sprite != null)
             {
-                Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
                 AutoUIUtil.GUIShowSprite(sprite);
-                AutoUIEventManager.GUIOneCertainSpriteEvent.Publish(this, new GUIOneCertainSpriteArgs(sprite));
             }
             EditorGUILayout.EndVertical();
         }
-        public void SetSpritePath(string spritePath)
+        public void SetSprite(Sprite sprite)
         {
-            this.spritePath = spritePath;
+            this.sprite = sprite;
         }
-        private string spritePath = "";
+        private Sprite sprite =null;
     }
     public class GUIManySpriteCandidate : ProductBase
     {
-        public string[] spritePaths = null;
+        public Sprite[] sprites=null;
         public int ChooseSpriteoffset = -1;
-        public override ProductBase CreateProduct()
-        {
-            return new GUIManySpriteCandidate();
-        }
         public override void Content()
         {
             EditorGUILayout.BeginHorizontal();
             // 有很多图片，是候选的。
-            if (spritePaths != null)
+            if (sprites != null)
             {
-                for (int i = 0; i < spritePaths.Length; i++)
+                for (int i = 0; i < sprites.Length; i++)
                 {
-                    Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePaths[i]);
-                    AutoUIUtil.GUIShowSprite(sprite);
+                    AutoUIUtil.GUIShowSprite(sprites[i]);
                     if (ChooseSpriteoffset != i)
                     {
                         if (GUILayout.Button("选择这个Sprite"))
@@ -352,7 +336,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                             // 选择这个Sprite
                             // 发布事件
                             ChooseSpriteoffset = i;
-                            AutoUIEventManager.GUIManySpriteCandidateEvent.Publish(this, new GUIManySpriteCandidateArgs(spritePaths[i]));
+                            AutoUIEventManager.GUIManySpriteCandidateEvent.Publish(this, new GUIManySpriteCandidateArgs(sprites[i]));
                         }
                     }
                     else
@@ -363,12 +347,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
             EditorGUILayout.EndHorizontal();
         }
-        public void SetSpritePath(string[] spritePaths)
+        public void SetSprites(Sprite[] sprites)
         {
-            this.spritePaths = spritePaths;
+            this.sprites = sprites;
         }
     }
-
 
 
 

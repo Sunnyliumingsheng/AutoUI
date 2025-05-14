@@ -7,11 +7,15 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
     public class AutoUIException : Exception
     {
+        public bool isError = true;
         public string warnning;
         public AutoUIException(string message)
             : base("AutoUI Error: " + message)
         {
             this.warnning = message;
+        }
+        public AutoUIException(string message,bool notError):base(message) {
+            isError=false;
         }
 
         public override string ToString()

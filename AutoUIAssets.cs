@@ -1,6 +1,8 @@
 // 动态的加载资源实在是太慢了。必须在最开始预加载一次，这是可行的。
 
 using System.Collections.Generic;
+using System.IO;
+using Tuyoo.Render;
 using UnityEditor;
 using UnityEngine;
 
@@ -39,6 +41,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             RecursionInit(layer.layers);
             foreach (var assetName in AssetsName)
             {
+                if (IsSpriteExist(assetName)){
+                   continue; 
+                }
                 var guids = AssetDatabase.FindAssets($"{assetName} t:Sprite");
                 if (guids.Length == 0)
                 {
@@ -57,10 +62,24 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     foreach (var guid in guids)
                     {
                         var path = AssetDatabase.GUIDToAssetPath(guid);
+                        // 进行检查，因为搜索的结果是模糊搜索，所以需要对名字进行查看，是不是精确搜索
+                        string filename=Path.GetFileNameWithoutExtension(path);
+                        if (filename!=assetName){
+                            continue;
+                        }
                         var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
                         sprites.Add(new SpriteInfo { path = path, sprite = sprite });
                     }
-                    AssetsManyName.Add(assetName, sprites);
+                    if(sprites.Count==0){
+                        // 并不是错误，很正常
+                        AssetsCantFind.Add(assetName);
+                    }
+                    if (sprites.Count == 1){
+                        AssetsOnlyOneName.Add(assetName, sprites[0]);
+                    }
+                    if (sprites.Count > 1){
+                        AssetsManyName.Add(assetName, sprites); 
+                    }
                 }
                 if (guids==null){
                     throw new AutoUIException("AssetsName is null");
@@ -100,7 +119,15 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             // 逻辑错误
             throw new AutoUIException("找不到这个预加载的sprite  名字为:"+name);
         }
-
+        private static bool IsSpriteExist(string name){
+            if (AssetsOnlyOneName.ContainsKey(name)){
+                return true;
+            }
+            if (AssetsManyName.ContainsKey(name)){
+                return true;
+            }
+            return false;
+        }
 
 
     }

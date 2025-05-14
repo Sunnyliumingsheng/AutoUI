@@ -11,138 +11,177 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     // 对每个层级进行一个简单的处理
     public class AutoUILayersProcessor
     {
-        /*  不需要了
-        public static void LayerProcessor(in Layer layer, ref GameObject layerGameObject)
+        /// README
+        /// LayerProcessor 所有用来处理GUI的回调函数都应该作为一个局部函数放在每个case里面，这样作为回调，处理起来是超级超级方便的。
+        private enum PixelState
         {
+            idle,// 空闲状态不进行任何操作
+            exit,// 退出
+            SkipImportImage,// 等待用户选择本地的图片进行导入
+            GetImagePathAndDestPath,
+            ChooseNewSprite,
+        };
+        public static void PixelLayerProcessor(in Layer layer, GameObject layerGameObject)
+        {
+            // 首先生成一个rectTransform和一个确认按钮
+
+            // 得益于这是个子线程，我将采用有利于编程的状态机模式进行处理
+
             switch (layer.eLayerKind)
             {
-                case ELayerKind.smartObject:
-                    SmartObjectLayerProcessor(in layer, ref layerGameObject);
-                    break;
                 case ELayerKind.pixel:
-                    PixelLayerProcessor(in layer, ref layerGameObject);
-                    break;
-                case ELayerKind.text:
-                    TextLayerProcessor(in layer, ref layerGameObject);
-                    break;
-                default:
-                    AutoUIException err = new AutoUIException("逻辑错误，这里不应该有其他图层进入" + layer.eLayerKind);
-                    LogUtil.LogError(err);
-                    break;
+
+                    PixelState pixelState = PixelState.idle;
+
+                    string srcPath = null; // 选择的图片路径
+                    string destPath = null; // 选择的导入路径
+                    Sprite selectSprite = null;
+
+
+                    ProductBase guiChangeRectTransform = GUIManager.CreateGUIRectTransformMode();
+                    ProductBase guiNotSelectSprite = GUIManager.CreateGUINotSelectSprite();
+                    ProductBase guiOneCertainSprite = GUIManager.CreateGUIOneCertainSprite();
+                    ProductBase guiManySpriteCandidate = GUIManager.CreateGUIManySpriteCandidate();
+                    ProductBase guiLayerConfirm = GUIManager.CreateGUILayerConfirm();
+
+                    void OnGUINotFindSpriteEvent(object sender, GUINotFindSpriteEventArgs args)
+                    {
+                        guiLayerConfirm.Show();
+                        if (args.SkipImportImage)
+                        {
+                            pixelState = PixelState.SkipImportImage;
+                        }
+                        else
+                        {
+                            pixelState = PixelState.GetImagePathAndDestPath;
+                            srcPath = args.ImageSrcPath;
+                            destPath = args.ImageDestPath;
+                        }
+                    }
+                    void OnGUIManySpriteCandidateEvent(object sender, GUIManySpriteCandidateArgs args)
+                    {
+                        selectSprite = args.SelectSprite;
+                        pixelState = PixelState.ChooseNewSprite;
+                    }
+                    void OnGUILayerConfirm(object sender, GUILayerConfirmArgs args)
+                    {
+                        pixelState = PixelState.exit;
+                    }
+                    void OnGUIChooseNewRectTransform(object sender, GUIChooseNewRectTransformArgs args)
+                    {
+                        AutoUIRectTransformProcessor.UpdateRectTransformProcessor(ref layerGameObject, args.mode);
+                    }
+
+                    FindSpriteResult findSpriteResult = AutoUIAssets.GetSprite(layer.name);
+
+
+                    guiChangeRectTransform.PutOnLine0();
+                    guiLayerConfirm.PutOnLine4();
+
+                    AutoUIEventManager.GUILayerConfirmEvent.Subscribe(OnGUILayerConfirm);
+                    AutoUIEventManager.GUIChooseNewRectTransformEvent.Subscribe(OnGUIChooseNewRectTransform);
+
+                    // todo : 添加功能到这里
+                    // 设置一下默认的rectTransoform样式的值
+                    if (guiChangeRectTransform is GUIRectTransformMode isGuiChangeRectTransform)
+                    {
+                        isGuiChangeRectTransform.SetOriginRectTransform(ERectTransformMode.middleCenter);
+                    }
+
+                    if (findSpriteResult == null)
+                    {
+                        LogUtil.LogError("寻找资源后发生错误得到的是null");
+                    }
+                    if (findSpriteResult.status == EFindAssetStatus.cantFind)
+                    {   // 让用户自行选择是否需要导入图片
+                        guiNotSelectSprite.PutOnLine1();
+                        AutoUIEventManager.GUINotFindSpriteEvent.Subscribe(OnGUINotFindSpriteEvent);
+                        // 这里还有错误
+                        guiLayerConfirm.Hide();
+                    }
+                    else
+                    {
+                        if (findSpriteResult.status == EFindAssetStatus.oneResult)
+                        {
+                            // 有一个确切的图片资源，直接使用即可
+                            guiOneCertainSprite.PutOnLine1();
+                            if (guiOneCertainSprite is GUIOneCertainSprite gui)
+                            {
+                                gui.SetSprite(findSpriteResult.oneResult.sprite);
+                            }
+                            // 直接执行给layerGameObject添加图片的操作
+                            AutoUI.MainThread.Run(() =>
+                            {
+                                PixelLayerGameObjectAddSprite(layerGameObject, findSpriteResult.oneResult.sprite);
+                            });
+                        }
+                        if (findSpriteResult.status == EFindAssetStatus.manyResult)
+                        {
+                            // 有多个图片资源，需要用户进行选择
+                            guiManySpriteCandidate.PutOnLine1();
+                            AutoUIEventManager.GUIManySpriteCandidateEvent.Subscribe(OnGUIManySpriteCandidateEvent);
+                            if (guiManySpriteCandidate is GUIManySpriteCandidate isGUIManySpriteCandidate)
+                            {
+                                Sprite[] sprites = new Sprite[findSpriteResult.manyResult.Count];
+                                for (int i = 0; i < findSpriteResult.manyResult.Count; i++)
+                                {
+                                    sprites[i] = findSpriteResult.manyResult[i].sprite;
+                                }
+                                isGUIManySpriteCandidate.SetSprites(sprites);
+                            }
+                        }
+                    }
+
+                    // 状态机处理
+                    while (true)
+                    {
+                        switch (pixelState)
+                        {
+                            case PixelState.idle:
+                                break;
+                            case PixelState.exit:
+                                AutoUIEventManager.GUINotFindSpriteEvent.Unsubscribe(OnGUINotFindSpriteEvent);
+                                AutoUIEventManager.GUIManySpriteCandidateEvent.Unsubscribe(OnGUIManySpriteCandidateEvent);
+                                AutoUIEventManager.GUILayerConfirmEvent.Unsubscribe(OnGUILayerConfirm);
+                                AutoUIEventManager.GUIChooseNewRectTransformEvent.Unsubscribe(OnGUIChooseNewRectTransform);
+
+
+                                guiOneCertainSprite.Destroy();
+                                guiManySpriteCandidate.Destroy();
+                                guiChangeRectTransform.Destroy();
+                                guiNotSelectSprite.Destroy();
+                                guiLayerConfirm.Destroy();
+                                return;
+                            case PixelState.SkipImportImage:
+                                // todo : 有空思考一下如何处理
+                                LogUtil.Log("按下了跳过按钮");
+                                pixelState = PixelState.idle;
+                                break;
+                            case PixelState.GetImagePathAndDestPath:
+                                LogUtil.Log("遇到了检索不到对应图片的情况选择了路径信息" + destPath + srcPath);
+                                // 导入图片，并将资源导入
+                                AutoUIImagesImportProcessor.ImportImage(srcPath, destPath);
+
+                                pixelState = PixelState.idle;
+                                break;
+                            case PixelState.ChooseNewSprite:
+                                AutoUI.MainThread.Run(() =>
+                                {
+                                    PixelLayerGameObjectAddSprite(layerGameObject, selectSprite);
+                                });
+                                pixelState = PixelState.idle;
+                                break;
+                        }
+                    }
             }
-        } */
-
-
-        /*   暂时只对像素和文本图层进行处理。  
-         public static void SmartObjectLayerProcessor(in Layer layer, ref GameObject layerGameObject)
-         {
-             // 智能对象的图片依赖引用名称
-             string imageAssetPath= AutoUIImagesImportProcessor.ParseImageName(layer.smartObjectLayerData.fileReference);
-             if(!AutoUIImagesImportProcessor.IsImageExist(imageAssetPath)){
-                 AutoUIException err = new AutoUIException("智能对象的图片依赖引用名称不存在 fileReference:"+layer.smartObjectLayerData.fileReference+"   imageAssetPath:"+imageAssetPath);
-                 LogUtil.LogError(err);
-                 return;
-             }
-             Sprite sprite = Resources.Load<Sprite>(imageAssetPath);
-             // 添加image
-             Image image = layerGameObject.AddComponent<Image>();
-             image.sprite = sprite;
-         } */
-
-        // public static void PixelLayerProcessor(Layer layer, GameObject layerGameObject)
-        // {
-        //     /* 请看Main中的导入步骤的注释
-        //     string imageAssetPath= AutoUIImagesImportProcessor.ParseImageName(layer.name)+".png";
-        //     if(!AutoUIImagesImportProcessor.IsImageExist(imageAssetPath)){
-        //         AutoUIException err = new AutoUIException("像素图层的图片依赖引用名称不存在name:"+layer.name+"   imageAssetPath:"+imageAssetPath);
-        //         LogUtil.LogError(err);
-        //         return; 
-        //     }
-        //     Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(imageAssetPath);
-        //     if(sprite == null){
-        //         AutoUIException err = new AutoUIException("找不到这个sprite  路径为:"+imageAssetPath);
-        //         LogUtil.LogError(err);
-        //         return;
-        //     }
-        //     */
-        //     // 利用unity的搜索功能，看看能找到几个这个名字的Sprite
-        //     string[] guids = AssetDatabase.FindAssets($"{layer.name} t:Sprite");
-        //     if (guids.Length == 0)
-        //     {
-        //         LogUtil.LogWarning("找不到这个sprite  名字为:" + layer.name);
-        //         ProductBase gui = GUIManager.CreateGUINotSelectSprite();
-        //         gui.PutOnLine0();
-
-        //         AutoUIEventManager.GUINotSelectSpriteEvent.Subscribe((sender, args) =>
-        //         {
-        //             if (args.SkipImportImage)
-        //             {
-        //                 LogUtil.Log("跳过导入图片");
-        //             }
-        //             else
-        //             {
-        //                 LogUtil.Log("这里是路径" + args.ImageSrcPath + args.ImageDestPath);
-        //             }
-        //             return;
-        //         });
-
-        //     }
-        //     if (guids.Length == 1)
-        //     {
-        //         LogUtil.Log("找到这个sprite  名字为:" + layer.name);
-        //         string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-        //         Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
-        //         Texture2D preview = AssetPreview.GetAssetPreview(sprite);
-        //         if (preview != null)
-        //         {
-        //             GUILayout.Label(preview, GUILayout.Width(64), GUILayout.Height(64));
-        //             GUILayout.Label("图片路径: " + path);
-        //             GUILayout.Button("确认是这个");
-        //         }
-
-        //     }
-        //     if (guids.Length > 1)
-        //     {
-        //         LogUtil.Log("找到多个sprite");
-        //         string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-        //         Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
-        //         Texture2D preview = AssetPreview.GetAssetPreview(sprite);
-        //         if (preview != null)
-        //         {
-        //             GUILayout.Label(preview, GUILayout.Width(64), GUILayout.Height(64));
-        //             GUILayout.Label("图片路径: " + path);
-        //             GUILayout.Button("确认是这个");
-        //         }
-        //     }
-
-
-        //     // 添加image
-        //     //Image image = layerGameObject.AddComponent<Image>();
-        //     //image.sprite = sprite;
-        // }
-
-        // 检索一下是否有对应的资源，如果没有返回null
-        public static string[] PixelLayerProcessorSelectSpritePath(Layer layer, GameObject layerGameObject)
+        }
+        private static void PixelLayerGameObjectAddSprite(GameObject gameObject, Sprite sprite)
         {
-            string[] guids = AssetDatabase.FindAssets($"{layer.name} t:Sprite");
-            if (guids.Length == 0)
-            {
-                return null;
-            }
-            else
-            {
-                string[] paths = new string[guids.Length];
-                for (int i = 0; i < guids.Length; i++)
-                {
-                    paths[i] = AssetDatabase.GUIDToAssetPath(guids[i]);
-                }
-                return paths;
-            }
+            gameObject.AddComponent<Image>().sprite = sprite;
         }
-        public static void PixelLayerProcessorAddSprite(GameObject layerGameObject,Sprite sprite){
-            layerGameObject.AddComponent<Image>().sprite = sprite;
-        }
-        
+
+
+
         public static void TextLayerProcessor(in Layer layer, ref GameObject layerGameObject)
         {
             // 第一部分，添加TMP

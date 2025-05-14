@@ -95,6 +95,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             EditorUtility.DisplayDialog(title, err.ToString(), "确定");
         }
         public static void HandleAutoUIError(AutoUIException err){
+            if(!err.isError){
+                Log("安全退出");
+                return;
+            }
             Log("stackTrace:"+err.StackTrace);
         }
 
