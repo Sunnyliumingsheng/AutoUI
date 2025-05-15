@@ -193,6 +193,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public float fontSize;
         public ColorRGB color;
         public string textAlign;
+        public bool haveShadow;
     }
 
     [System.Serializable]
