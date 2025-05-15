@@ -6,7 +6,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 {
     public class AutoUIUtil
     {
-        public static string scenePath = "Assets/Scenes/Start.unity";
+        public static string scenePath = AutoUIConfig.config.sprite.scenePath;
 
         public static float PSTextSizeToUnityTMPFontSize(int psTextSize)
         {

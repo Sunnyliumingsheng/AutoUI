@@ -5,10 +5,14 @@
         "fontScale":4
     },
     "Sprite":{
-        "spritePath":"Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset"
+        "spritePath":"Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset",
+        "scenePath":"Assets/Scenes/Start.unity"
     },
     "previewSpriteSize":{
         "width":100,
         "height":100
+    },
+    "fontMaterialPath":{
+        "miaobian":"Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF miaobian1.mat"
     }
 }
