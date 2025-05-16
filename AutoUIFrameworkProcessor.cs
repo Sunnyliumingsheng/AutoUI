@@ -30,8 +30,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     canvas.renderMode = RenderMode.WorldSpace;
                     break;
                 default:
-                    var err = new AutoUIException("遇到无法解析的renderMode:" + layers.canvasLayerData.renderMode);
-                    LogUtil.LogError(err);
+                    LogUtil.LogError("遇到无法解析的renderMode:" + layers.canvasLayerData.renderMode);
                     break;
             }
             canvas.renderMode = RenderMode.WorldSpace;
@@ -39,7 +38,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             canvasObj.AddComponent<GraphicRaycaster>();
             if (layers.eLayerKind != ELayerKind.canvas || layers.canvasLayerData == null)
             {
-                throw new AutoUIException("传入了错误的json数据或者解析时错误");
+                LogUtil.LogError("出现了错误,遇到了无法解析的layer类型或者canvasLayerData为null");
             }
 
             // 设置Canvas大小
@@ -67,8 +66,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
             else
             {
-                AutoUIException err = new("出现错误,遇到rectTransform为null的情况");
-                LogUtil.LogError(err);
+                LogUtil.LogError("出现错误,遇到rectTransform为null的情况");
             }
             return layerGameObject;
         }

@@ -57,28 +57,21 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     selectedFolderPath = AutoUIFile.SelectFolderPath();
                     if (string.IsNullOrEmpty(selectedFolderPath))
                     {
-                        var err = new AutoUIException("解析终止，因为未选择有效的文件夹路径。");
-                        LogUtil.LogError(err);
+                        LogUtil.LogError("解析终止，因为未选择有效的文件夹路径。");
                         return;
                     }
                     selectedJsonPath = selectedFolderPath + "/data.json";
                     if (!AutoUIFile.IsJsonFileExist(selectedFolderPath))
                     {
-                        var err = new AutoUIException("解析终止，因为未选择有效的 JSON 文件路径。");
-                        LogUtil.LogError(err);
+                        LogUtil.LogError("解析终止，因为未选择有效的 JSON 文件路径。");
                         return;
                     }
                     AutoUIConfig.GetAutoUIConfigData();
                     imageNameToSpritePath = new Dictionary<string, string>();
                 }
-                catch (AutoUIException err)
-                {
-                    LogUtil.HandleAutoUIError(err);
-                    return;
-                }
                 catch (Exception err)
                 {
-                    LogUtil.LogError(err);
+                    LogUtil.HandleAutoUIError(err);
                     return;
                 }
                 LogUtil.Log("=== 开始解析json ===");
@@ -88,14 +81,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     layers = LayerJsonParser.ParseFromJson(json);
                     layers.VerifyLayers();
                 }
-                catch (AutoUIException err)
-                {
-                    LogUtil.HandleAutoUIError(err);
-                    return;
-                }
                 catch (Exception err)
                 {
-                    LogUtil.LogError(err);
+                    LogUtil.HandleAutoUIError(err);
                     return;
                 }
                 LogUtil.Log("=== 加载Sprite ===");
@@ -104,14 +92,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     AutoUIAssets.InitAssets(layers);
                     LogUtil.Log("加载Sprite");
                 }
-                catch (AutoUIException err)
-                {
-                    LogUtil.HandleAutoUIError(err);
-                    return;
-                }
                 catch (Exception err)
                 {
-                    LogUtil.LogError(err);
+                    LogUtil.HandleAutoUIError(err);
                     return;
                 }
                 LogUtil.Log("=== 新建一个预制体 ===");
@@ -127,14 +110,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     AutoUIFile.SavePrefabAndCleanup(prefabGameObject);
                     LogUtil.Log("创建预制体成功");
                 }
-                catch (AutoUIException err)
-                {
-                    LogUtil.HandleAutoUIError(err);
-                    return;
-                }
                 catch (Exception err)
                 {
-                    LogUtil.LogError(err);
+                    LogUtil.HandleAutoUIError(err);
                     return;
                 }
                 LogUtil.Log("=== 新开一个线程作为控制器开始对预制体进行修改 ===");
@@ -144,27 +122,35 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     isRunning = true;
                     controllor = new Thread(() =>
                    {
-                       LogUtil.Log("hello , 成功开启了一个线程");
-                       AutoUIControllor.MainControllor(prefabGameObject);
-                       LogUtil.Log("成功退出了线程");
-                       // 重新保存一下这个prefab
-                       MainThread.Run(() =>
+                       try
                        {
-                           AutoUIFile.SavePrefabAndCleanup(prefabGameObject);
-                       });
-                       LogUtil.Log("重新保存prefab");
+                           LogUtil.Log("hello , 成功开启了一个线程");
+                           AutoUIControllor.MainControllor(prefabGameObject);
+                           LogUtil.Log("成功退出了线程");
+                           // 重新保存一下这个prefab
+                           MainThread.Run(() =>
+                           {
+                               AutoUIFile.SavePrefabAndCleanup(prefabGameObject);
+                           });
+                           LogUtil.Log("重新保存prefab");
+                       }
+                       catch (Exception err)
+                       {
+                           MainThread.Run(() =>
+                           {
+                               LogUtil.HandleAutoUIError(err);
+                           });
+                           return;
+                       }
                    });
                     controllor.Start();
                 }
-                catch (AutoUIException err)
+                catch (Exception err)
                 {
                     LogUtil.HandleAutoUIError(err);
                     return;
                 }
-                catch (Exception err)
-                {
-                    LogUtil.LogError(err);
-                }
+                LogUtil.Hint();
             }
         }
 

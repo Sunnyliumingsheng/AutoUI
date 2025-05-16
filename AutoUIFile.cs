@@ -32,8 +32,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             string jsonPath = folderPath + "/data.json";
             if (!File.Exists(jsonPath))
             {
-                var err = new AutoUIException("未找到data.json文件！" + jsonPath);
-                LogUtil.LogError(err);
+                LogUtil.LogError("未找到data.json文件！" + jsonPath);
                 return false;
             }
             else

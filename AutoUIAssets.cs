@@ -82,7 +82,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     }
                 }
                 if (guids==null){
-                    throw new AutoUIException("AssetsName is null");
+                    LogUtil.Log("AssetsName is null");
                 }
 
             }
@@ -103,21 +103,26 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
         }
 
-        public static FindSpriteResult GetSprite(string name){
+        public static FindSpriteResult GetSprite(string name)
+        {
             // 大多数情况下都是一个结果
-            if (AssetsOnlyOneName.ContainsKey(name)){
-                return new FindSpriteResult { status = EFindAssetStatus.oneResult, oneResult = AssetsOnlyOneName[name] }; 
+            if (AssetsOnlyOneName.ContainsKey(name))
+            {
+                return new FindSpriteResult { status = EFindAssetStatus.oneResult, oneResult = AssetsOnlyOneName[name] };
             }
             // 少数情况下是多个结果
-            if (AssetsManyName.ContainsKey(name)){
+            if (AssetsManyName.ContainsKey(name))
+            {
                 return new FindSpriteResult { status = EFindAssetStatus.manyResult, manyResult = AssetsManyName[name] };
             }
             // 极少数情况下是找不到的
-            if (AssetsCantFind.Contains(name)){
+            if (AssetsCantFind.Contains(name))
+            {
                 return new FindSpriteResult { status = EFindAssetStatus.cantFind };
             }
             // 逻辑错误
-            throw new AutoUIException("找不到这个预加载的sprite  名字为:"+name);
+            LogUtil.LogError("找不到这个预加载的sprite  名字为:" + name);
+            return null;
         }
         private static bool IsSpriteExist(string name){
             if (AssetsOnlyOneName.ContainsKey(name)){

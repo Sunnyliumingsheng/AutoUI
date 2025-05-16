@@ -16,9 +16,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         {
             if (!File.Exists(AutoUIConfigPath))
             {
-                var err = new AutoUIException("AutoUIConfig.json不存在,请去AutoUIConfig.cs中进行设置");
-                LogUtil.LogError(err);
-                return;
+                LogUtil.LogError("AutoUIConfig.json不存在,请去AutoUIConfig.cs中进行设置");
             }
             string json = File.ReadAllText(AutoUIConfigPath);
             LogUtil.Log("json path:" + AutoUIConfigPath);

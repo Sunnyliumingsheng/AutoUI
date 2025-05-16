@@ -105,14 +105,12 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     switch (layer.eLayerKind)
                     {
                         case ELayerKind.group:
-                            var err = new AutoUIException("出现错误");
-                            LogUtil.LogError(err);
+                            LogUtil.LogError("出现错误");
                             break;
                         default:
                             if (layer.smartObjectLayerData == null && layer.pixelLayerData == null && layer.textLayerData == null && layer.canvasLayerData == null)
                             {
-                                var err0 = new AutoUIException("解析失败,这里提供layer的name方便检索" + layer.name);
-                                LogUtil.LogError(err0);
+                                LogUtil.LogError("解析失败,这里提供layer的name方便检索" + layer.name);
                             }
                             break;
 
@@ -133,8 +131,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 case ELayerKind.smartObject:
                     return this.smartObjectLayerData;
                 default:
-                    var err = new AutoUIException(" 试图获取ILayerData接口但是遇到了无法解析的elayerKind:"+this.eLayerKind);
-                    LogUtil.LogError(err);
+                    LogUtil.LogError(" 试图获取ILayerData接口但是遇到了无法解析的elayerKind:"+this.eLayerKind);
                     return null;
             }
         }
@@ -157,8 +154,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
            if (this.stretchStretchModeData!= null){
                 return this.stretchStretchModeData;
            }
-           var err = new AutoUIException(" 试图获取IUICoordinateSystem接口但是遇到了无法解析的rectTransform");
-           LogUtil.LogError(err);
+           LogUtil.LogError(" 试图获取IUICoordinateSystem接口但是遇到了无法解析的rectTransform");
            return null;
         }
     }

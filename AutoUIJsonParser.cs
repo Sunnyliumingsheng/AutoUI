@@ -48,8 +48,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 case "text":
                     return ELayerKind.text;
                 default:
-                    var err=new AutoUIException("处理层级类型的时候出现了错误");
-                    LogUtil.LogError(err);
+                    LogUtil.LogError("处理层级类型的时候出现了错误");
                     return ELayerKind.pixel;
             }
         }

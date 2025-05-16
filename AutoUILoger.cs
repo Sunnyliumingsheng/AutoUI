@@ -54,58 +54,31 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static void LogWarning(string message)
         {
             hadWarnning = true;
-            Log($"[警告] {message}");  // 直接调用 Log，不再递归
-        }
-        // 不抛出错误，只是打印堆栈
-        public static void LogWarning(AutoUIException err){
-            Log($"[警告] {err.ToString()}");
-        }
-        public static void AddWarning(string message){
             LogWarningList.Add(message);
+            Log($"[警告] {message}");
         }
-        public static void AddWarning(AutoUIException err){
-            LogWarningList.Add(err.WarnningMessage());
-        }
-        // 会抛出错误，不需要手动抛出
-        public static void LogError(Exception err)
+
+        public static void LogError(string message)
         {
-            Log($"[错误] {err.ToString()}");  // 直接调用 Log，不再递归
-            ShowErrorDialog("出现错误", err);
-            throw err;
+            throw new System.Exception(message); ;
         }
-        // 会抛出错误，不需要手动抛出
-        public static void LogError(AutoUIException err)
+        public static void ShowErrorDialog(string title, string errMessage)
         {
-            Log($"[错误] {err.ToString()}");  // 直接调用 Log，不再递归
-            ShowErrorDialog("出现错误", err);
-            throw err;
+            EditorUtility.DisplayDialog(title, errMessage, "确定");
         }
-        public static void LogError(string message){
-            var err=new AutoUIException(message);
-            Log($"[错误] {err.ToString()}");
-            ShowErrorDialog("出现错误", err);
-            throw err;
-        }
-        public static void ShowErrorDialog(string title, Exception err)
+        public static void HandleAutoUIError(Exception err)
         {
-            EditorUtility.DisplayDialog(title, err.ToString(), "确定");
-        }
-        public static void ShowErrorDialog(string title, AutoUIException err)
-        {
-            EditorUtility.DisplayDialog(title, err.ToString(), "确定");
-        }
-        public static void HandleAutoUIError(AutoUIException err){
-            if(!err.isError){
-                Log("安全退出");
-                return;
-            }
-            Log("stackTrace:"+err.StackTrace);
+            ShowErrorDialog("出现错误", err.Message);
+            Log($"[错误] {err.Message} ");
+            Log("stackTrace:" + err.StackTrace);
+
         }
 
         // 最后程序结束时调用
         public static void Hint()
         {
-            if (LogWarningList.Count > 0){
+            if (LogWarningList.Count > 0)
+            {
                 Log("=== 警告日志 ===");
                 foreach (string warning in LogWarningList)
                 {

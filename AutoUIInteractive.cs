@@ -165,7 +165,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     srcPath = AutoUIFile.GUIChooseImagePath();
                     if (srcPath == "")
                     {
-                        LogUtil.AddWarning("没有成功选择图片");
+                        LogUtil.LogWarning("没有成功选择图片");
                         AutoUIEventManager.GUINotFindSpriteEvent.Publish(this, new GUINotFindSpriteEventArgs(true, "", ""));
                         return;
                     }
@@ -180,7 +180,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     srcPath = AutoUIFile.GUIChooseImagePath();
                     if (srcPath == "")
                     {
-                        LogUtil.AddWarning("没有成功选择图片");
+                        LogUtil.LogWarning("没有成功选择图片");
                         AutoUIEventManager.GUINotFindSpriteEvent.Publish(this, new GUINotFindSpriteEventArgs(true, "", ""));
                         return;
                     }

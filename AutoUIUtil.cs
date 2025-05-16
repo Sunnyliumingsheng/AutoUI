@@ -25,7 +25,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
             else
             {
-                new AutoUIException("打开prefab失败");
+                LogUtil.LogError("打开Prefab失败");
             }
             return prefab.prefabContentsRoot;
         }
