@@ -29,6 +29,14 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
             return prefab.prefabContentsRoot;
         }
+        public static void FocusGameObject(GameObject go)
+        {
+            if (go == null)
+            {
+                LogUtil.LogError("传入的GameObject为空聚焦失败");
+            }
+            Selection.activeGameObject = go;
+        }
         public static void GUIShowSprite(Sprite sprite)
         {
             if (sprite != null)
@@ -54,7 +62,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 float drawHeight = spriteRect.height * scale;
 
                 // 居中绘制
-                Rect previewRect = GUILayoutUtility.GetRect(AutoUIConfig.config.previewSpriteSize.width, AutoUIConfig.config.previewSpriteSize.height , GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
+                Rect previewRect = GUILayoutUtility.GetRect(AutoUIConfig.config.previewSpriteSize.width, AutoUIConfig.config.previewSpriteSize.height, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
                 Rect centeredRect = new Rect(
                     previewRect.x + (previewRect.width - drawWidth) / 2,
                     previewRect.y + (previewRect.height - drawHeight) / 2,

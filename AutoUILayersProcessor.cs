@@ -112,7 +112,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                             // 直接执行给layerGameObject添加图片的操作
                             AutoUI.MainThread.Run(() =>
                             {
-                                PixelLayerGameObjectAddSprite(layerGameObject, findSpriteResult.oneResult.sprite);
+                                AutoUIPixelTool.PixelLayerGameObjectAddSprite(layerGameObject, findSpriteResult.oneResult.sprite);
                             });
                         }
                         if (findSpriteResult.status == EFindAssetStatus.manyResult)
@@ -168,7 +168,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                             case PixelState.ChooseNewSprite:
                                 AutoUI.MainThread.Run(() =>
                                 {
-                                    PixelLayerGameObjectAddSprite(layerGameObject, selectSprite);
+                                    AutoUIPixelTool.PixelLayerGameObjectAddSprite(layerGameObject, selectSprite);
                                 });
                                 pixelState = PixelState.idle;
                                 break;
@@ -176,16 +176,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     }
             }
         }
-        private static void PixelLayerGameObjectAddSprite(GameObject gameObject, Sprite sprite)
-        {
-            Image image = gameObject.AddComponent<Image>();
-            image.sprite = sprite;
-            if (sprite.border != Vector4.zero)
-            {
-                // 这是九宫格
-                image.type = Image.Type.Sliced;
-            }
-        }
+
 
 
 
@@ -227,6 +218,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.Log(presetMaterial.name);
                     tmp.fontSharedMaterial = presetMaterial;
                 }
+                tmp.enableWordWrapping = false;
                 EditorUtility.SetDirty(localizationTextTMP);
 
             });

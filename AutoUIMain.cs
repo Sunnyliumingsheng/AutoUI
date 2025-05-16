@@ -19,7 +19,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static string selectedJsonPath;
         public static Thread controllor;
         public static bool isRunning = false;
-        public static GameObject prefabGameObjec;
+        public static GameObject prefabGameObject;
         public static AutoUIMainThreadDispatcher MainThread;
         public static Layer layers;
         public static Dictionary<string, string> imageNameToSpritePath;
@@ -114,21 +114,43 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.LogError(err);
                     return;
                 }
-                LogUtil.Log("=== 新开一个线程作为控制器 ===");
+                LogUtil.Log("=== 新建一个预制体 ===");
                 try
                 {
-                    GameObject canvasObj = AutoUIFrameworkProcesser.CreateCanvasWithData(layers);
+                    prefabGameObject = AutoUIFrameworkProcesser.CreateCanvasWithData(layers);
+                    if (prefabGameObject == null)
+                    {
+                        LogUtil.LogError("创建canvas失败");
+                        return;
+                    }
+                    AutoUIFrameworkProcesser.InitLayerProcessor(in layers.layers, ref prefabGameObject);
+                    AutoUIFile.SavePrefabAndCleanup(prefabGameObject);
+                    LogUtil.Log("创建预制体成功");
+                }
+                catch (AutoUIException err)
+                {
+                    LogUtil.HandleAutoUIError(err);
+                    return;
+                }
+                catch (Exception err)
+                {
+                    LogUtil.LogError(err);
+                    return;
+                }
+                LogUtil.Log("=== 新开一个线程作为控制器开始对预制体进行修改 ===");
+                try
+                {
                     // 新建一个线程
                     isRunning = true;
                     controllor = new Thread(() =>
                    {
                        LogUtil.Log("hello , 成功开启了一个线程");
-                       AutoUIControllor.MainControllor(layers, canvasObj);
+                       AutoUIControllor.MainControllor(prefabGameObject);
                        LogUtil.Log("成功退出了线程");
                        // 重新保存一下这个prefab
                        MainThread.Run(() =>
                        {
-                           AutoUIFile.SavePrefabAndCleanup(canvasObj);
+                           AutoUIFile.SavePrefabAndCleanup(prefabGameObject);
                        });
                        LogUtil.Log("重新保存prefab");
                    });

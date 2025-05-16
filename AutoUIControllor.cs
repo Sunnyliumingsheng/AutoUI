@@ -11,58 +11,87 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     {
 
         // 原来你才是最终boss？！
-        public static void MainControllor(Layer layers, GameObject canvasObj)
+        public static void MainControllor(GameObject canvasObj)
         {
             // 开始进行遍历
-            RecursiveProcess(layers.layers, canvasObj);
+            RecursiveProcess(canvasObj);
         }
-        private static void RecursiveProcess(List<Layer> layers, GameObject parent)
+        private static void RecursiveProcess(GameObject parent)
         {
-            if(checkExit())return;
-            foreach (var layer in layers)
+            if (checkExit()) return;
+            Transform parentTransform = getTransform(parent);
+            int count = getChildCount(parent);
+            for (int i = 0; i < count; i++)
             {
-                var task = AutoUI.MainThread.AsyncRun<GameObject>(() =>
-                {
-                    return AutoUIFrameworkProcesser.ProcessLayerFramework(in layer, ref parent);
-                });
-                GameObject layerGameObject = task.Result;
-                if (layer.eLayerKind == ELayerKind.group)
+                GameObject childGameObject = getChild(parent, i);
+                Transform childTransform = getTransform(childGameObject);
+                int childChildCount = getChildCount(childGameObject);
+                if (childChildCount != 0)
                 {
                     // 在PS中为Group意味着下面还有东西，并且由于group图层没有任何图片文字信息所以除了rectTransfrom之外不需要处理
                     // todo添加对组的处理
-                    RecursiveProcess(layer.layers, layerGameObject);
-                    if(checkExit())return;
+                    RecursiveProcess(childGameObject);
+                    if (checkExit()) return;
                 }
-                if (layer.eLayerKind == ELayerKind.pixel)
+                else
                 {
-                    AutoUILayersProcessor.PixelLayerProcessor(layer, layerGameObject);
-                    if(checkExit())return;
-                }
-                if(layer.eLayerKind==ELayerKind.text){
-                    // todo 添加交互界面
-                    AutoUILayersProcessor.TextLayerProcessor(layer,layerGameObject);
-                }
+                    // 对应着PS中的图层，从这里开始就需要处理了
+                    AutoUI.MainThread.Run(() =>
+                    {
+                        AutoUIUtil.FocusGameObject(childGameObject);
+                    });
 
+                }
             }
         }
         public static bool checkExit()
         {
             return !AutoUI.isRunning;
         }
-        public static void exit(){
-            AutoUI.isRunning=false;
+        public static void exit()
+        {
+            AutoUI.isRunning = false;
         }
         /*
             用法解析
             检查子函数是否想要退出
             if(checkExit())return;
-
             自己想要退出
             exit();return;
-
-
         */
-
+        public static Transform getTransform(GameObject go)
+        {
+            Transform transform = null;
+            AutoUI.MainThread.Run(() => { transform = go.transform; });
+            if (transform == null)
+            {
+                LogUtil.LogError("主线程获取transform失败");
+                return null;
+            }
+            return transform;
+        }
+        public static int getChildCount(GameObject go)
+        {
+            int count = -1;
+            AutoUI.MainThread.Run(() => { count = go.transform.childCount; });
+            if (count == -1)
+            {
+                LogUtil.LogError("主线程获取子物体数量失败");
+                return -1;
+            }
+            return count;
+        }
+        public static GameObject getChild(GameObject go, int index)
+        {
+            GameObject child = null;
+            AutoUI.MainThread.Run(() => { child = go.transform.GetChild(index).gameObject; });
+            if (child == null)
+            {
+                LogUtil.LogError("主线程获取子物体失败");
+                return null;
+            }
+            return child;
+        }
 
     }
 
