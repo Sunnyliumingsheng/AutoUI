@@ -2,7 +2,7 @@
     "text":{
         "componentName":"LocalizationText_TMP",
         "fontAssetPath":"Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset",
-        "fontScale":4
+        "fontScale":1
     },
     "Sprite":{
         "spritePath":"Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset",
