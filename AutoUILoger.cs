@@ -82,7 +82,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 Log("=== 警告日志 ===");
                 foreach (string warning in LogWarningList)
                 {
-                    LogWarning(warning);  // 调用 LogWarning 方法，不再递归
+                    Log("警告汇总"+warning);
                 }
             }
             if (hadWarnning)

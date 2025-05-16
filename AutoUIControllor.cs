@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -62,7 +63,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static Transform getTransform(GameObject go)
         {
             Transform transform = null;
-            AutoUI.MainThread.Run(() => { transform = go.transform; });
+            Task<Transform> task = AutoUI.MainThread.AsyncRun<Transform>(() => { return go.transform; });
+            transform = task.Result;
             if (transform == null)
             {
                 LogUtil.LogError("主线程获取transform失败");
@@ -73,7 +75,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static int getChildCount(GameObject go)
         {
             int count = -1;
-            AutoUI.MainThread.Run(() => { count = go.transform.childCount; });
+            var task=AutoUI.MainThread.AsyncRun<int>(() => { return go.transform.childCount; });
+            count = task.Result;
             if (count == -1)
             {
                 LogUtil.LogError("主线程获取子物体数量失败");
@@ -84,7 +87,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static GameObject getChild(GameObject go, int index)
         {
             GameObject child = null;
-            AutoUI.MainThread.Run(() => { child = go.transform.GetChild(index).gameObject; });
+            var task=AutoUI.MainThread.AsyncRun<GameObject>(() => { return go.transform.GetChild(index).gameObject; });
+            child = task.Result; 
             if (child == null)
             {
                 LogUtil.LogError("主线程获取子物体失败");

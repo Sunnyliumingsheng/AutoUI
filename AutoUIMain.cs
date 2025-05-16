@@ -44,7 +44,14 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         {
             while (MainThread.actions.TryDequeue(out Action action))
             {
-                action?.Invoke();
+                try
+                {
+                    action?.Invoke();
+                }
+                catch (Exception err)
+                {
+                    LogUtil.HandleAutoUIError(err);
+                }
             }
         }
         public static void AutoUIMain()
