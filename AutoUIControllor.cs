@@ -31,6 +31,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 {
                     // 在PS中为Group意味着下面还有东西，并且由于group图层没有任何图片文字信息所以除了rectTransfrom之外不需要处理
                     // todo添加对组的处理
+                    AutoUIGroupLayerProcessor.Process(childGameObject);
                     RecursiveProcess(childGameObject);
                     if (checkExit()) return;
                 }
@@ -75,7 +76,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static int getChildCount(GameObject go)
         {
             int count = -1;
-            var task=AutoUI.MainThread.AsyncRun<int>(() => { return go.transform.childCount; });
+            var task = AutoUI.MainThread.AsyncRun<int>(() => { return go.transform.childCount; });
             count = task.Result;
             if (count == -1)
             {
@@ -87,14 +88,25 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static GameObject getChild(GameObject go, int index)
         {
             GameObject child = null;
-            var task=AutoUI.MainThread.AsyncRun<GameObject>(() => { return go.transform.GetChild(index).gameObject; });
-            child = task.Result; 
+            var task = AutoUI.MainThread.AsyncRun<GameObject>(() => { return go.transform.GetChild(index).gameObject; });
+            child = task.Result;
             if (child == null)
             {
                 LogUtil.LogError("主线程获取子物体失败");
                 return null;
             }
             return child;
+        }
+        public static UnityEngine.RectTransform GetRectTransform(GameObject go)
+        {
+            var task = AutoUI.MainThread.AsyncRun<UnityEngine.RectTransform>(() => { return go.GetComponent<UnityEngine.RectTransform>(); });
+            var rectTransform = task.Result;
+            if (rectTransform == null)
+            {
+                LogUtil.LogError("主线程获取RectTransform失败");
+                return null;
+            }
+            return rectTransform;
         }
 
     }

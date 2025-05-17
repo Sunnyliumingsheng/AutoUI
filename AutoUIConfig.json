@@ -14,5 +14,8 @@
     },
     "fontMaterialPath":{
         "miaobian":"Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF miaobian1.mat"
+    },
+    "guiBoard":{
+        "lineNum":8
     }
 }

@@ -8,10 +8,19 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 {
     public class AutoUIEventManager
     {
-        public static readonly EventPublisher<GUINotFindSpriteEventArgs> GUINotFindSpriteEvent = new EventPublisher<GUINotFindSpriteEventArgs>();
-        public static readonly EventPublisher<GUIChooseNewRectTransformArgs> GUIChooseNewRectTransformEvent = new EventPublisher<GUIChooseNewRectTransformArgs>();
-        public static readonly EventPublisher<GUILayerConfirmArgs> GUILayerConfirmEvent = new EventPublisher<GUILayerConfirmArgs>();
-        public static readonly EventPublisher<GUIManySpriteCandidateArgs> GUIManySpriteCandidateEvent= new EventPublisher<GUIManySpriteCandidateArgs>(); 
+        // public static readonly EventPublisher<GUINotFindSpriteEventArgs> GUINotFindSpriteEvent = new EventPublisher<GUINotFindSpriteEventArgs>();
+        // public static readonly EventPublisher<GUIChooseNewRectTransformArgs> GUIChooseNewRectTransformEvent = new EventPublisher<GUIChooseNewRectTransformArgs>();
+        // public static readonly EventPublisher<GUILayerConfirmArgs> GUILayerConfirmEvent = new EventPublisher<GUILayerConfirmArgs>();
+        // public static readonly EventPublisher<GUIManySpriteCandidateArgs> GUIManySpriteCandidateEvent= new EventPublisher<GUIManySpriteCandidateArgs>(); 
+        public static readonly EventPublisher<UIConfirmArgs> UIConfirmEvent = new EventPublisher<UIConfirmArgs>();
+    }
+    public class UIConfirmArgs : EventArgs
+    {
+        public bool confirm;
+        public UIConfirmArgs(bool confirm)
+        {
+            this.confirm = confirm;
+        }
     }
 
 
@@ -34,6 +43,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             _event -= callback;
         }
     }
+    /*
     public class GUINotFindSpriteEventArgs : EventArgs
     {
         public bool SkipImportImage;
@@ -66,7 +76,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             this.SelectSprite=newSprite;
         }
     }
-
+*/
 
 
 

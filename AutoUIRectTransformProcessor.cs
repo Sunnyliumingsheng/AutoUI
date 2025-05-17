@@ -228,7 +228,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             return ERectTransformMode.middleCenter;
 
         }
-
+        public static ERectTransformMode GetERectTransformModeFromRectTransform(UnityEngine.RectTransform rectTransform)
+        {
+            // 建立在除了canvas，所有子对象都是middleCenter的基础上
+            return ERectTransformMode.middleCenter;
+        }
     }
 
 }

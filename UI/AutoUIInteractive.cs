@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 using BZTA;
+using System.Runtime.CompilerServices;
+using FrameworkEditor.BehaviourTree;
 // 提供交互组件，只需要创建完成之后PutOnLine就能展示，记得最后Destroy。设置值的方式是SetValue，返回值的方式是通过时间的回调。
 namespace Assets.Scripts.Tools.Editor.AutoUI
 {
@@ -10,24 +12,12 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         // 实际上这个方式性能最好，而且还很可控，比如，你想始终将确认按钮放在下面，丢到最下面就好。不想要了直接destory.不必繁琐的逻辑，只要记得这件事，但是总共就这么点，而且逻辑在类里面。
         public static void Interactice()
         {
-            if(AutoUIBoard.line0!=null && AutoUIBoard.line0.IsShow()){
-                AutoUIBoard.line0.Content();
-            }
-            DrawLine();
-            if(AutoUIBoard.line1!=null && AutoUIBoard.line1.IsShow()){
-                AutoUIBoard.line1.Content(); 
-            }
-            DrawLine();
-            if(AutoUIBoard.line2!=null && AutoUIBoard.line2.IsShow()){
-                AutoUIBoard.line2.Content();
-            }
-            DrawLine();
-            if(AutoUIBoard.line3!=null && AutoUIBoard.line3.IsShow()){
-                AutoUIBoard.line3.Content();
-            }
-            DrawLine();
-            if(AutoUIBoard.line4!=null && AutoUIBoard.line4.IsShow()){
-                AutoUIBoard.line4.Content(); 
+            for (int i = 0; i < AutoUIBoard.lineNum; i++)
+            {
+                if (AutoUIBoard.IsAlreadyExist(i) && AutoUIBoard.IsLineShow(i))
+                {
+                    AutoUIBoard.UnsafeShowlineContent(i);
+                }
             }
             DrawLine();
         }
@@ -44,48 +34,99 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     // 保存线内容的类
     public class AutoUIBoard
     {
-        public static ProductBase line0;
-        public static ProductBase line1;
-        public static ProductBase line2;
-        public static ProductBase line3;
-        public static ProductBase line4;
+        public static void AutoUIBoardInit()
+        {
+            lineNum = AutoUIConfig.config.guiBoard.lineNum;
+            line = new UIBase[lineNum];
+        }
+        public static int lineNum;
+        public static UIBase[] line;
+        public static bool lineOffset超出范围(int offset)
+        {
+            return (offset < 0 || offset >= AutoUIBoard.lineNum);
+        }
+        public static bool IsAlreadyExist(int offset)
+        {
+            return (line[offset] != null);
+        }
+        public static void UnsafeShowlineContent(int offset)
+        {
+            line[offset]?.Content();
+        }
+        public static void ClearLine(int offset)
+        {
+            if (!lineOffset超出范围(offset) || IsAlreadyExist(offset))
+            {
+                line[offset] = null;
+            }
+        }
+        public static bool IsLineShow(int offset)
+        {
+            if (!lineOffset超出范围(offset) && IsAlreadyExist(offset))
+            {
+                return line[offset].IsShow();
+            }
+            return false;
+        }
+        public static void PutOnLine(UIBase ui, int offset)
+        {
+            if (offset < 0 || offset >= AutoUIBoard.lineNum)
+            {
+                LogUtil.LogError("lineOffset超出范围");
+                return;
+            }
+            if (IsAlreadyExist(offset))
+            {
+                LogUtil.LogError("lineOffset已经存在");
+                return;
+            }
+            line[offset] = ui;
+            ui.lineOffset = offset;
+        }
+        public static void SimplePut(UIBase ui)
+        {
+            for (int i = 0; i < AutoUIBoard.lineNum; i++)
+            {
+                if (AutoUIBoard.IsAlreadyExist(i))
+                {
+                    continue;
+                }
+                else
+                {
+                    PutOnLine(ui, i);
+                    return;
+                }
+            }
+        }
+        public static void PutEndLine(UIBase ui)
+        {
+            for (int i = AutoUIBoard.lineNum - 1; i >= 0; i--)
+            {
+                if (lineOffset超出范围(i))
+                {
+                    LogUtil.LogError("lineOffset超出范围");
+                    return;
+                }
+                if (AutoUIBoard.IsAlreadyExist(i))
+                {
+                    continue;
+                }
+                else
+                {
+                    PutOnLine(ui, i);
+                    return;
+                }
+            }
+        }
     }
 
     // 产品的抽象基类，提供默认实现
-    public abstract class ProductBase
+    public abstract class UIBase
     {
-        protected  bool isShow=true;
-        public  int lineOffset = -1;
+        protected bool isShow = true;
+        public int lineOffset = -1;
 
-        public void PutOnLine1()
-        {
-            AutoUIBoard.line1 = this;
-            lineOffset = 1;
-        }
 
-        public void PutOnLine2()
-        {
-            AutoUIBoard.line2 = this;
-            lineOffset = 2;
-        }
-
-        public void PutOnLine3()
-        {
-            AutoUIBoard.line3 = this;
-            lineOffset = 3;
-        }
-
-        public void PutOnLine4()
-        {
-            AutoUIBoard.line4 = this;
-            lineOffset = 4;
-        }
-
-        public void PutOnLine0()
-        {
-            AutoUIBoard.line0 = this;
-            lineOffset = 0;
-        }
 
         public void Show()
         {
@@ -99,14 +140,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         public void Destroy()
         {
-            switch (lineOffset)
+            if (lineOffset == -1)
             {
-                case 0: AutoUIBoard.line0 = null; break;
-                case 1: AutoUIBoard.line1 = null; break;
-                case 2: AutoUIBoard.line2 = null; break;
-                case 3: AutoUIBoard.line3 = null; break;
-                case 4: AutoUIBoard.line4 = null; break;
+                LogUtil.LogError("没有找到对应的lineOffset");
             }
+            AutoUIBoard.ClearLine(lineOffset);
         }
 
         public bool IsShow()
@@ -117,33 +155,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public abstract void Content();
     }
 
-    // 用于创建产品的管理类
-    public class GUIManager
-    {
-        public static ProductBase CreateGUINotSelectSprite()
-        {
-            return new GUINotFindSprite();
-        }
-        public static ProductBase CreateGUILayerConfirm()
-        {
-            return new GUILayerConfirm();
-        }
-        public static ProductBase CreateGUIRectTransformMode()
-        {
-            return new GUIRectTransformMode();
-        }
-        public static ProductBase CreateGUIOneCertainSprite()
-        {
-            return new GUIOneCertainSprite();
-        }
-        public static ProductBase CreateGUIManySpriteCandidate()
-        {
-            return new GUIManySpriteCandidate();
-        }
-    }
+/*
 
     // 产品类，继承ProductBase，管理事件
-    public class GUINotFindSprite : ProductBase
+    public class GUINotFindSprite : UIBase
     {
         string srcPath = "";
         string destPath = "";
@@ -216,7 +231,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
     }
     // 普通图层可以选择这个
-    public class GUILayerConfirm : ProductBase
+    public class GUILayerConfirm : UIBase
     {
         public override void Content()
         {
@@ -231,7 +246,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
     }
     // 对于有小组图层，有时候要用到剪枝，但是我现在认为暂时不支持是更明知的选择
-    public class GUIGroupConfirm : ProductBase
+    public class GUIGroupConfirm : UIBase
     {
         public override void Content()
         {
@@ -248,53 +263,13 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
     }
     // 选择布局模式
-    public class GUIRectTransformMode : ProductBase
-    {
-        public override void Content()
-        {
-            EditorGUILayout.BeginVertical();
-            GUILayout.Label("选择布局模式", EditorStyles.boldLabel);
-            int columns = 4;
-            int rows = 4;
-            ERectTransformMode[,] modeGrid = new ERectTransformMode[4, 4]
-            {
-        { ERectTransformMode.leftBottom, ERectTransformMode.middleBottom, ERectTransformMode.rightBottom, ERectTransformMode.StretchBottom },
-        { ERectTransformMode.leftCenter, ERectTransformMode.middleCenter, ERectTransformMode.rightCenter, ERectTransformMode.StretchCenter },
-        { ERectTransformMode.leftTop, ERectTransformMode.middleTop, ERectTransformMode.rightTop, ERectTransformMode.StretchTop },
-        { ERectTransformMode.leftStretch, ERectTransformMode.middleStretch, ERectTransformMode.rightStretch, ERectTransformMode.stretchStretch },
-            };
+    */
 
-            for (int row = 0; row < rows; row++)
-            {
-                EditorGUILayout.BeginHorizontal();
-                for (int col = 0; col < columns; col++)
-                {
-                    ERectTransformMode mode = modeGrid[row, col];
-                    if (mode == originMode)
-                    {
-                        GUILayout.TextField("已经选择" + mode.ToString(), GUILayout.Width(120), GUILayout.Height(30));
-                        continue;
-                    }
-                    if (GUILayout.Button(mode.ToString(), GUILayout.Width(120), GUILayout.Height(30)))
-                    {
-                        AutoUIEventManager.GUIChooseNewRectTransformEvent.Publish(this, new GUIChooseNewRectTransformArgs(mode));
-                        originMode = mode;
-                    }
-                }
-                EditorGUILayout.EndHorizontal();
-            }
 
-            EditorGUILayout.EndVertical();
-        }
-        private ERectTransformMode originMode = ERectTransformMode.middleCenter;
-        public void SetOriginRectTransform(ERectTransformMode eRectTransformMode)
-        {
-            this.originMode = eRectTransformMode;
-        }
-    }
+/*
 
     // 像素图层找到了确定的Sprite，可以直接使用，这里只作为展示功能。
-    public class GUIOneCertainSprite : ProductBase
+    public class GUIOneCertainSprite : UIBase
     {
         public override void Content()
         {
@@ -311,11 +286,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         {
             this.sprite = sprite;
         }
-        private Sprite sprite =null;
+        private Sprite sprite = null;
     }
-    public class GUIManySpriteCandidate : ProductBase
+    public class GUIManySpriteCandidate : UIBase
     {
-        public Sprite[] sprites=null;
+        public Sprite[] sprites = null;
         public int ChooseSpriteoffset = -1;
         public override void Content()
         {
@@ -353,23 +328,5 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 }

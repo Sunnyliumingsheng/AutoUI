@@ -74,6 +74,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                         return;
                     }
                     AutoUIConfig.GetAutoUIConfigData();
+                    AutoUIBoard.AutoUIBoardInit();
                     imageNameToSpritePath = new Dictionary<string, string>();
                 }
                 catch (Exception err)

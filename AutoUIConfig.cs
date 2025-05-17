@@ -33,6 +33,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         public PreviewSpriteSize previewSpriteSize;
         public FontMaterialPath fontMaterialPath;
+        public GuiBoard guiBoard;
     }
 
     [System.Serializable]
@@ -58,5 +59,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     public class FontMaterialPath
     {
         public string miaobian;
+    }
+    [System.Serializable]
+    public class GuiBoard
+    {
+        public int lineNum;
     }
 }
