@@ -20,6 +20,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 switch (status)
                 {
                     case EGroupStatus.idle:
+                        if (AutoUIControllor.checkExit())return;
                         break;
                     case EGroupStatus.confirm:
                         rectTransformModule.DestoryModule();
