@@ -42,6 +42,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
         private void Update()
         {
+            // 我想不出更好的办法了，但是直接滥用RePaint真的很爽，如果想办法精细控制，要花费不少的精力，效果也不太好，就这个了，这个爽。
+            Repaint();
             while (MainThread.actions.TryDequeue(out Action action))
             {
                 try
