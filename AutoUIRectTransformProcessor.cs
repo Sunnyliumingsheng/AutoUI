@@ -41,42 +41,23 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
             // Step 1: 记录当前 RectTransform 的世界空间矩形信息
             Vector3[] worldCorners = new Vector3[4];
-            rectTransform.GetWorldCorners(worldCorners); // 0:左下，1:左上，2:右上，3:右下
+            rectTransform.GetLocalCorners(worldCorners); // 0:左下，1:左上，2:右上，3:右下
             Vector3 bottomLeft = worldCorners[0];
             Vector3 topRight = worldCorners[2];
 
-            // Step 2: 获取当前父物体
-            UnityEngine.RectTransform parent = rectTransform.parent as UnityEngine.RectTransform;
-            if (parent == null)
-            {
-                Debug.LogWarning("RectTransform has no parent RectTransform.");
-                return;
-            }
+            float width = topRight.x - bottomLeft.x;
+            float height = topRight.y - bottomLeft.y;
 
-            // Step 3: 根据目标 eRectTransformMode 设置 anchorMin / anchorMax / pivot
-            Vector2 newAnchorMin, newAnchorMax, newPivot;
+            Vector2[] oldAnchor = new Vector2[2];
+            oldAnchor[0] = rectTransform.anchorMin;
+            oldAnchor[1] = rectTransform.anchorMax;
 
-
-            GetAnchorAndPivotFromMode(eRectTransformMode, out newAnchorMin, out newAnchorMax, out newPivot);
-
-            // Step 4: 在改变 anchor 前，记录本地坐标下的四个角
-            Vector2 localBottomLeft;
-            Vector2 localTopRight;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, RectTransformUtility.WorldToScreenPoint(null, bottomLeft), null, out localBottomLeft);
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, RectTransformUtility.WorldToScreenPoint(null, topRight), null, out localTopRight);
-
-            // Step 5: 设置 anchor 和 pivot
-            rectTransform.anchorMin = newAnchorMin;
-            rectTransform.anchorMax = newAnchorMax;
+            Vector2[] newAnchor = new Vector2[2];
+            GetAnchorAndPivotFromMode(eRectTransformMode, out newAnchor[0], out newAnchor[1], out Vector2 newPivot);
             rectTransform.pivot = newPivot;
+            rectTransform.anchorMin = newAnchor[0];
+            rectTransform.anchorMax = newAnchor[1];
 
-            // Step 6: 设置 anchoredPosition 和 sizeDelta 来恢复外观
-            Vector2 newSize = localTopRight - localBottomLeft;
-            rectTransform.sizeDelta = newSize;
-
-            // 计算中心点
-            Vector2 center = (localBottomLeft + localTopRight) / 2f;
-            rectTransform.anchoredPosition = center;
         }
         public static void GetAnchorAndPivotFromMode(ERectTransformMode mode, out Vector2 anchorMin, out Vector2 anchorMax, out Vector2 pivot)
         {

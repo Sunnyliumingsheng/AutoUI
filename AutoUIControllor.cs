@@ -27,6 +27,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 GameObject childGameObject = getChild(parent, i);
                 Transform childTransform = getTransform(childGameObject);
                 int childChildCount = getChildCount(childGameObject);
+                // 对应着PS中的图层，从这里开始就需要处理了
+                AutoUI.MainThread.Run(() =>
+                {
+                    AutoUIUtil.FocusGameObject(childGameObject);
+                });
                 if (childChildCount != 0)
                 {
                     // 在PS中为Group意味着下面还有东西，并且由于group图层没有任何图片文字信息所以除了rectTransfrom之外不需要处理
@@ -37,11 +42,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 }
                 else
                 {
-                    // 对应着PS中的图层，从这里开始就需要处理了
-                    AutoUI.MainThread.Run(() =>
-                    {
-                        AutoUIUtil.FocusGameObject(childGameObject);
-                    });
+
 
                 }
             }
