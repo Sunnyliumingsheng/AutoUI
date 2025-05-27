@@ -17,45 +17,23 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         // 选择的文件夹位置
         public static string selectedFolderPath;
         public static string selectedJsonPath;
-        public static Thread controllor;
         public static bool isRunning = false;
         public static GameObject prefabGameObject;
-        public static AutoUIMainThreadDispatcher MainThread;
         public static Layer layers;
         public static Dictionary<string, string> imageNameToSpritePath;
 
         [MenuItem("Tools/AutoUI")]
         public static void ShowWindow()
         {
-            MainThread = AutoUIMainThreadDispatcher.getInstace();
             GetWindow<AutoUI>("AutoUI 交互面板");
             AutoUIMain();
         }
         void OnDisable()
         {
             LogUtil.Log("手动关闭窗口");
-            AutoUIControllor.exit();
         }
-        private void OnGUI()
-        {
-            AutoUIInteractive.Interactice();
-        }
-        private void Update()
-        {
-            // 我想不出更好的办法了，但是直接滥用RePaint真的很爽，如果想办法精细控制，要花费不少的精力，效果也不太好，就这个了，这个爽。
-            Repaint();
-            while (MainThread.actions.TryDequeue(out Action action))
-            {
-                try
-                {
-                    action?.Invoke();
-                }
-                catch (Exception err)
-                {
-                    LogUtil.HandleAutoUIError(err);
-                }
-            }
-        }
+
+
         public static void AutoUIMain()
         {
             {
@@ -125,41 +103,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.HandleAutoUIError(err);
                     return;
                 }
-                LogUtil.Log("=== 新开一个线程作为控制器开始对预制体进行修改 ===");
-                try
-                {
-                    // 新建一个线程
-                    isRunning = true;
-                    controllor = new Thread(() =>
-                   {
-                       try
-                       {
-                           LogUtil.Log("hello , 成功开启了一个线程");
-                           AutoUIControllor.MainControllor(prefabGameObject);
-                           LogUtil.Log("成功退出了线程");
-                           // 重新保存一下这个prefab
-                           MainThread.Run(() =>
-                           {
-                               AutoUIFile.SavePrefabAndCleanup(prefabGameObject);
-                           });
-                           LogUtil.Log("重新保存prefab");
-                       }
-                       catch (Exception err)
-                       {
-                           MainThread.Run(() =>
-                           {
-                               LogUtil.HandleAutoUIError(err);
-                           });
-                           return;
-                       }
-                   });
-                    controllor.Start();
-                }
-                catch (Exception err)
-                {
-                    LogUtil.HandleAutoUIError(err);
-                    return;
-                }
+                
                 LogUtil.Hint();
             }
         }
