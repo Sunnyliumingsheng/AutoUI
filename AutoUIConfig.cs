@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using UnityEditor.SearchService;
 
 
 
@@ -25,44 +26,100 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
 
     }
-    [System.Serializable]
     public class AutoUIConfigData
     {
-        public TextConfigData text;
-        public SpriteConfigData sprite;
+        [JsonProperty("default")]
+        public DefaultConfig Default { get; set; }
 
-        public PreviewSpriteSize previewSpriteSize;
-        public FontMaterialPath fontMaterialPath;
-        public GuiBoard guiBoard;
+        [JsonProperty("fontAssets")]
+        public FontAssets FontAssets { get; set; }
+
+        [JsonProperty("materialPreset")]
+        public MaterialPresets MaterialPresets { get; set; }
     }
 
-    [System.Serializable]
-    public class TextConfigData
+    public class DefaultConfig
     {
-        public string componentName;
-        public string fontAssetPath;
-        public float fontScale;
+        [JsonProperty("buttonClickEffect")]
+        public ButtonClickEffect ButtonClickEffect { get; set; }
+
+        [JsonProperty("buttonComponent")]
+        public ButtonComponent ButtonComponent { get; set; }
+        [JsonProperty("scene")]
+        public Scene Scene { get; set; }
     }
-    [System.Serializable]
-    public class SpriteConfigData
+
+    public class ButtonClickEffect
     {
-        public string spritePath;
-        public string scenePath;
+        [JsonProperty("EnableClickEffect")]
+        public bool EnableClickEffect { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("componentName")]
+        public string ComponentName { get; set; }
+
+        [JsonProperty("componentPath")]
+        public string ComponentPath { get; set; }
     }
-    [System.Serializable]
-    public class PreviewSpriteSize
+
+    public class ButtonComponent
     {
-        public int width;
-        public int height;
+        [JsonProperty("useComponent")]
+        public bool UseComponent { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("prefabPath")]
+        public string PrefabPath { get; set; }
     }
-    [System.Serializable]
-    public class FontMaterialPath
+    public class Scene
     {
-        public string miaobian;
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("path")]
+        public string Path { get; set; }
     }
-    [System.Serializable]
-    public class GuiBoard
+
+    public class FontAssets
     {
-        public int lineNum;
+        [JsonProperty("default")]
+        public FontAsset Default { get; set; }
+
+        [JsonProperty("title")]
+        public FontAsset Title { get; set; }
+
+        [JsonProperty("supercell")]
+        public FontAsset Supercell { get; set; }
+    }
+
+    public class FontAsset
+    {
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("path")]
+        public string Path { get; set; }
+    }
+
+    public class MaterialPresets
+    {
+        [JsonProperty("shadow")]
+        public MaterialPreset Shadow { get; set; }
+
+        [JsonProperty("yellow")]
+        public MaterialPreset Yellow { get; set; }
+    }
+
+    public class MaterialPreset
+    {
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("path")]
+        public string Path { get; set; }
     }
 }

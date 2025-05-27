@@ -72,7 +72,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
 
         // 初始化处理预制体的各个层级
-        public static void InitLayerProcessor(in List<Layer> layers, ref GameObject parentGameObject)
+        public static void 递归处理所有图层(in List<Layer> layers, ref GameObject parentGameObject)
         {
             foreach (var layer in layers)
             {
@@ -80,86 +80,30 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 switch (layer.eLayerKind)
                 {
                     case ELayerKind.group:
-                        InitLayerProcessor(in layer.layers, ref newGameObject);
+                        递归处理所有图层(in layer.layers, ref newGameObject);
                         break;
                     case ELayerKind.pixel:
-                        PixelLayerProcessor(in layer, ref newGameObject);
+                        AutoUIPixelLayerProcessor.PixelLayerProcessor(in layer, ref newGameObject);
                         break;
                     case ELayerKind.text:
-                        TextLayerProcessor(in layer, ref newGameObject);
+                        AutoUITextLayerProcessor.TextLayerProcessor(in layer, ref newGameObject);
                         break;
                     default:
                         LogUtil.LogWarning("初始化生成预制体时出现了无法解析的layer类型:" + layer.eLayerKind);
                         break;
                 }
-
-            }
-        }
-
-        private static void PixelLayerProcessor(in Layer layer, ref GameObject pixelGameObject)
-        {
-            FindSpriteResult result = AutoUIAssets.GetSprite(layer.name);
-            if (result == null)
-            {
-                LogUtil.LogError("无法找到对应的sprite:" + layer.name);
-                return;
-            }
-            switch (result.status)
-            {
-                case EFindAssetStatus.oneResult:
-                    Sprite sprite = result.oneResult.sprite;
-                    AutoUIPixelTool.PixelLayerGameObjectAddSprite(pixelGameObject, sprite);
-                    break;
-                case EFindAssetStatus.manyResult:
-                    LogUtil.LogWarning("出现了多个同名的sprite:" + layer.name + "需要手动解决");
-                    break;
-                case EFindAssetStatus.cantFind:
-                    LogUtil.LogWarning("没有找到对应的sprite:" + layer.name);
-                    break;
-                default:
-                    LogUtil.LogError("出现了无法解析的EFIndAssetStatus:" + result.status);
-                    break;
-            }
-        }
-        private static void TextLayerProcessor(in Layer layer, ref GameObject textGameObject)
-        {
-            // 第一部分，添加TMP
-            TextMeshProUGUI tmp = textGameObject.AddComponent<TextMeshProUGUI>();
-            tmp.text = layer.textLayerData.text;
-            // todo : 寻找到一个合适的字体转化关系函数。并进行使用
-            tmp.fontSize = AutoUIUtil.PSTextSizeToUnityTMPFontSize(Mathf.RoundToInt(layer.textLayerData.fontSize));
-            TMP_FontAsset tmpFontAsset = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(AutoUIConfig.config.text.fontAssetPath);
-            if (tmpFontAsset == null)
-            {
-                LogUtil.LogError("找不到字体资源 路径为:" + AutoUIConfig.config.text.fontAssetPath);
-                return;
-            }
-            tmp.font = tmpFontAsset;
-            tmp.color = new Color(
-                layer.textLayerData.color.r / 255f,
-                layer.textLayerData.color.g / 255f,
-                layer.textLayerData.color.b / 255f
-                );
-            var localizationTextTMP = textGameObject.AddComponent<LocalizationText_TMP>();
-            // 使用反射来给私有成员mLabel赋值
-            var field = typeof(LocalizationText_TMP).GetField("mLabel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            field.SetValue(localizationTextTMP, tmp);
-
-            // mywar特殊支持
-            if (layer.textLayerData.haveShadow)
-            {
-                Material presetMaterial = AssetDatabase.LoadAssetAtPath<Material>(AutoUIConfig.config.fontMaterialPath.miaobian);
-                if (presetMaterial == null)
+                if (layer.components != null)
                 {
-                    LogUtil.LogError("找不到预设材质 路径为:" + AutoUIConfig.config.fontMaterialPath.miaobian);
-                    return;
+                    foreach (var component in layer.components)
+                    {
+                        LogUtil.Log(component.ToString());
+                    }
                 }
-                LogUtil.Log(presetMaterial.name);
-                tmp.fontSharedMaterial = presetMaterial;
             }
-            tmp.enableWordWrapping = false;
-            EditorUtility.SetDirty(localizationTextTMP);
         }
+
+        
+        
 
 
     }

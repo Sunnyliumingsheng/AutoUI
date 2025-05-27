@@ -23,17 +23,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public static Dictionary<string, string> imageNameToSpritePath;
 
         [MenuItem("Tools/AutoUI")]
-        public static void ShowWindow()
-        {
-            GetWindow<AutoUI>("AutoUI 交互面板");
-            AutoUIMain();
-        }
-        void OnDisable()
-        {
-            LogUtil.Log("手动关闭窗口");
-        }
-
-
         public static void AutoUIMain()
         {
             {
@@ -54,7 +43,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                         return;
                     }
                     AutoUIConfig.GetAutoUIConfigData();
-                    AutoUIBoard.AutoUIBoardInit();
                     imageNameToSpritePath = new Dictionary<string, string>();
                 }
                 catch (Exception err)
@@ -94,7 +82,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                         LogUtil.LogError("创建canvas失败");
                         return;
                     }
-                    AutoUIFrameworkProcesser.InitLayerProcessor(in layers.layers, ref prefabGameObject);
+                    AutoUIFrameworkProcesser.递归处理所有图层(in layers.layers, ref prefabGameObject);
                     AutoUIFile.SavePrefabAndCleanup(prefabGameObject);
                     LogUtil.Log("创建预制体成功");
                 }

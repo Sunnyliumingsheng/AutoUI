@@ -1,21 +1,71 @@
 {
-    "text":{
-        "componentName":"LocalizationText_TMP",
-        "fontAssetPath":"Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset",
-        "fontScale":1
+    "testMode": true,
+    "components": {
+        "group": [
+            {
+                "name": "prefab",
+                "description": "如果这个组需要被复制使用或动态生成最好标记为prefab",
+                "appearance": "标记为prefab",
+                "type": "checkbox",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "description": "这个prefab的名字",
+                        "appearance": "prefab名称",
+                        "type": "text",
+                        "default": "默认参数名"
+                    }
+                ]
+            },
+            {
+                "name": "button",
+                "description": "这个组将成为一个按钮",
+                "appearance": "设置为按钮",
+                "type": "checkbox",
+                "parameters": []
+            }
+        ],
+        "text": []
     },
-    "Sprite":{
-        "spritePath":"Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset",
-        "scenePath":"Assets/Scenes/Start.unity"
+    "default": {
+        "buttonClickEffect": {
+            "EnableClickEffect": true,
+            "description": "是否启用点击效果脚本",
+            "componentName": "ButtonClickEffect",
+            "componentPath": "Packages/com.tuyoo.tuyooframework/Unity/UI/Components/ButtonClickEffect.cs"
+        },
+        "buttonComponent": {
+            "useComponent": false,
+            "description": "按钮有两种常见的实现方式一种是用buttonTemplate预制体一种是直接使用button的组件,暂时不支持buttonTemplate",
+            "prefabPath": "unsupport"
+        },
+        "scene":{
+            "description": "默认的场景",
+            "path":"Assets/Scenes/Start.unity"
+        }
     },
-    "previewSpriteSize":{
-        "width":100,
-        "height":100
+    "fontAssets": {
+        "default": {
+            "description": "默认字体",
+            "path": "Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset"
+        },
+        "title": {
+            "description": "标题字体",
+            "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle.ttf"
+        },
+        "supercell": {
+            "description": "SVN-supercell字体",
+            "path": "Assets/GameAssets/ABNew/Font/SLG_new_text/SVN-Supercell_Magic_SDF.asset"
+        }
     },
-    "fontMaterialPath":{
-        "miaobian":"Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF miaobian1.mat"
-    },
-    "guiBoard":{
-        "lineNum":8
+    "materialPreset": {
+        "shadow":{
+            "description": "描边预设",
+            "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle miaobian1.mat"
+        },
+        "yellow":{
+            "description": "黄色艺术字预设",
+            "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle yishuzi01.mat"
+        }
     }
 }

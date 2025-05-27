@@ -10,7 +10,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     public class MyComponent
     {
         public string name;
-        public Dictionary<string, object> properties;
+        public Dictionary<string, object> parameters;
     }
 
     // 有以下几种层级，特殊的是group 有layers,但是没有layerData  . canvas可能没有rectTransform
