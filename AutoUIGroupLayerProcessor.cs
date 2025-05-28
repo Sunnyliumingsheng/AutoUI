@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scripts.Tools.Editor.AutoUI
@@ -17,16 +18,12 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
 
             /////// 处理组件
-            if (layer.components != null)
+            if (AutoUIUtil.IsComponentExist(in layer, "button"))
             {
-                foreach (var component in layer.components)
-                {
-                    // 这里直接写死处理，逻辑上来说，你想要添加新的组件支持，必然修改代码，不是简单修改json的事情。
-                    switch (component.name)
-                    {
-                        case "button":
-                            break;
-                    }
+                var button = newGameObject.AddComponent<UnityEngine.UI.Button>();
+                if (AutoUIConfig.config.Default.ButtonClickEffect.EnableClickEffect)
+                {// 如果使用点击效果
+                    newGameObject.AddComponent<UnityFramework.ButtonClickEffect>();
                 }
             }
 
@@ -40,10 +37,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     if (component.name == "prefab")
                     {
                         return true;
-                    }
-                    else
-                    {
-                        return false;
                     }
                 }
             }

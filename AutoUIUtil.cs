@@ -33,6 +33,20 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
             Selection.activeGameObject = go;
         }
+        public static bool IsComponentExist(in Layer layer,  string componentName)
+        {
+            if (layer.components != null)
+            {
+                foreach (var component in layer.components)
+                {
+                    if (component.name == componentName)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
     }
 }

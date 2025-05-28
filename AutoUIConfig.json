@@ -25,9 +25,21 @@
                 "parameters": []
             }
         ],
-        "text": []
+        "text": [
+            {
+                "name":"title",
+                "description":"在unity中使用标题字体",
+                "appearance":"在unity中使用标题字体",
+                "type":"checkbox",
+                "parameters":[]
+            }
+        ]
     },
     "default": {
+        "localization":{
+            "description": "是否在文本内容中使用到本地化支持组件",
+            "isUseLocalization": true
+        },
         "buttonClickEffect": {
             "EnableClickEffect": true,
             "description": "是否启用点击效果脚本",
@@ -39,38 +51,44 @@
             "description": "按钮有两种常见的实现方式一种是用buttonTemplate预制体一种是直接使用button的组件,暂时不支持buttonTemplate",
             "prefabPath": "unsupport"
         },
-        "scene":{
+        "scene": {
             "description": "默认的场景",
-            "path":"Assets/Scenes/Start.unity"
+            "path": "Assets/Scenes/Start.unity"
         },
-        "prefab":{
+        "prefab": {
             "description": "默认的prefab的位置和名字",
-            "path":"Assets/Prefabs/UI",
-            "name":"test.prefab"
+            "path": "Assets/Prefabs/UI",
+            "name": "test.prefab"
         }
     },
     "fontAssets": {
         "default": {
             "description": "默认字体",
-            "path": "Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset"
+            "path": "Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset",
+            "materialPreset": {
+                "shadow": {
+                    "description": "描边预设",
+                    "path": "Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF miaobian1.mat"
+                }
+            }
         },
         "title": {
             "description": "标题字体",
-            "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle.ttf"
+            "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle SDF.asset",
+            "materialPreset": {
+                "shadow": {
+                    "description": "描边预设",
+                    "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle miaobian1.mat"
+                },
+                "yellow": {
+                    "description": "黄色艺术字预设",
+                    "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle yishuzi01.mat"
+                }
+            }
         },
         "supercell": {
             "description": "SVN-supercell字体",
             "path": "Assets/GameAssets/ABNew/Font/SLG_new_text/SVN-Supercell_Magic_SDF.asset"
-        }
-    },
-    "materialPreset": {
-        "shadow":{
-            "description": "描边预设",
-            "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle miaobian1.mat"
-        },
-        "yellow":{
-            "description": "黄色艺术字预设",
-            "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle yishuzi01.mat"
         }
     }
 }

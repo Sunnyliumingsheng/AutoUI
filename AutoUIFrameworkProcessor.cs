@@ -101,6 +101,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                         GameObject prefab = AutoUIFile.LoadPrefab(prefabName);
                         GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
                         instance.transform.SetParent(parentGameObject.transform);
+                        instance.name = layer.name;
                         PrefabProcessLayerFramework(in layer, ref instance);
                         AutoUIGroupLayerProcessor.GroupLayerProcessor(in layer, ref instance);
                     }
@@ -110,8 +111,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                         ProcessLayerFramework(in layer, ref newGameObject);
                         AutoUIGroupLayerProcessor.GroupLayerProcessor(in layer, ref newGameObject);
                         递归处理所有图层(in layer.layers, ref newGameObject);
-                        string prefabPath = AutoUIFile.SavePrefabAndConnect(newGameObject,prefabName);
+                        string prefabPath = AutoUIFile.SavePrefabAndConnect(newGameObject, prefabName);
                         AutoUIGroupLayerProcessor.AddPrefabToPrefabList(prefabName);
+                        newGameObject.name = layer.name;
                     }
                 }
                 else

@@ -37,31 +37,59 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             // 描边支持
             if (layer.textLayerData.haveShadow)
             {
-                Material presetMaterial = AssetDatabase.LoadAssetAtPath<Material>(AutoUIConfig.config.MaterialPresets.Shadow.Path);
+                Material presetMaterial = AssetDatabase.LoadAssetAtPath<Material>(AutoUIConfig.config.FontAssets.Default.MaterialPreset.Shadow.Path);
                 if (presetMaterial == null)
                 {
-                    LogUtil.LogError("找不到预设材质 路径为:" + AutoUIConfig.config.MaterialPresets.Shadow.Path);
+                    LogUtil.LogError("找不到预设材质 路径为:" + AutoUIConfig.config.FontAssets.Default.MaterialPreset.Shadow.Path);
                     return;
                 }
-                LogUtil.Log(tmp.text + "字体设置为了shadow");
                 tmp.fontSharedMaterial = presetMaterial;
             }
 
             // 是否换行 todo 在PS中开发一下这个获取的功能
             tmp.enableWordWrapping = false;
 
-            tmp.ForceMeshUpdate();  // <-- 这个非常重要
-            AssetDatabase.SaveAssets();
+
             /////// 添加组件
 
 
-            // 本地化组件
-            var localizationTextTMP = textGameObject.AddComponent<LocalizationText_TMP>();
-            var field = typeof(LocalizationText_TMP).GetField("mLabel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            field.SetValue(localizationTextTMP, tmp);
-            EditorUtility.SetDirty(localizationTextTMP);
+            // 本地化组件支持 项目强制
+            if (AutoUIConfig.config.Default.Localization.IsUseLocalization)
+            {
+                var localizationTextTMP = textGameObject.AddComponent<LocalizationText_TMP>();
+                var field = typeof(LocalizationText_TMP).GetField("mLabel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                field.SetValue(localizationTextTMP, tmp);
+                EditorUtility.SetDirty(localizationTextTMP);
+            }
+
+            // title组件支持
+            if (AutoUIUtil.IsComponentExist(in layer, "title"))
+            {
+                tmpFontAsset = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(AutoUIConfig.config.FontAssets.Title.Path);
+                if (tmpFontAsset == null)
+                {
+                    LogUtil.LogError("找不到字体资源 路径为:" + AutoUIConfig.config.FontAssets.Title.Path);
+                    return;
+                }
+                tmp.font = tmpFontAsset;
+                // 描边支持
+                if (layer.textLayerData.haveShadow)
+                {
+                    Material presetMaterial = AssetDatabase.LoadAssetAtPath<Material>(AutoUIConfig.config.FontAssets.Title.MaterialPreset.Shadow.Path);
+                    if (presetMaterial == null)
+                    {
+                        LogUtil.LogError("找不到预设材质 路径为:" + AutoUIConfig.config.FontAssets.Title.MaterialPreset.Shadow.Path);
+                        return;
+                    }
+                    tmp.fontSharedMaterial = presetMaterial;
+                }
+            }
 
 
+
+            /////// 刷新一次tmp组件
+            tmp.ForceMeshUpdate();  // <-- 这个非常重要
+            AssetDatabase.SaveAssets();
         }
     }
 }

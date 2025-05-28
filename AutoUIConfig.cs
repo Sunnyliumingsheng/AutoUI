@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using UnityEditor.Localization.Editor;
 using UnityEditor.SearchService;
 
 
@@ -33,10 +34,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         [JsonProperty("fontAssets")]
         public FontAssets FontAssets { get; set; }
-
-        [JsonProperty("materialPreset")]
-        public MaterialPresets MaterialPresets { get; set; }
     }
+    // ----------------------------- Default -----------------------------
 
     public class DefaultConfig
     {
@@ -45,10 +44,20 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         [JsonProperty("buttonComponent")]
         public ButtonComponent ButtonComponent { get; set; }
+
         [JsonProperty("scene")]
-        public Scene Scene { get; set; }
+        public SceneInfo Scene { get; set; }
+
         [JsonProperty("prefab")]
-        public Prefab Prefab { get; set; }
+        public PrefabInfo Prefab { get; set; }
+        [JsonProperty("localization")]
+        public Localization Localization { get; set; }
+    }
+    public class Localization {
+        [JsonProperty("description")]
+        public string Description { get; set; }
+        [JsonProperty("isUseLocalization")]
+        public bool IsUseLocalization { get; set; }
     }
 
     public class ButtonClickEffect
@@ -77,7 +86,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         [JsonProperty("prefabPath")]
         public string PrefabPath { get; set; }
     }
-    public class Scene
+
+    public class SceneInfo
     {
         [JsonProperty("description")]
         public string Description { get; set; }
@@ -85,16 +95,20 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         [JsonProperty("path")]
         public string Path { get; set; }
     }
-    public class Prefab
+
+    public class PrefabInfo
     {
         [JsonProperty("description")]
         public string Description { get; set; }
 
         [JsonProperty("path")]
         public string Path { get; set; }
+
         [JsonProperty("name")]
         public string Name { get; set; }
     }
+
+    // ----------------------------- Font Assets -----------------------------
 
     public class FontAssets
     {
@@ -115,6 +129,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         [JsonProperty("path")]
         public string Path { get; set; }
+
+        [JsonProperty("materialPreset")]
+        public MaterialPresets MaterialPreset { get; set; }
     }
 
     public class MaterialPresets
