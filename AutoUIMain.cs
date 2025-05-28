@@ -17,7 +17,6 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         // 选择的文件夹位置
         public static string selectedFolderPath;
         public static string selectedJsonPath;
-        public static bool isRunning = false;
         public static GameObject prefabGameObject;
         public static Layer layers;
         public static Dictionary<string, string> imageNameToSpritePath;

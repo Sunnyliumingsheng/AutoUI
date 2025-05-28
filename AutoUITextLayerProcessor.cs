@@ -43,14 +43,15 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                     LogUtil.LogError("找不到预设材质 路径为:" + AutoUIConfig.config.MaterialPresets.Shadow.Path);
                     return;
                 }
-                LogUtil.Log(presetMaterial.name);
+                LogUtil.Log(tmp.text + "字体设置为了shadow");
                 tmp.fontSharedMaterial = presetMaterial;
             }
 
-            // 是否换行
+            // 是否换行 todo 在PS中开发一下这个获取的功能
             tmp.enableWordWrapping = false;
 
-
+            tmp.ForceMeshUpdate();  // <-- 这个非常重要
+            AssetDatabase.SaveAssets();
             /////// 添加组件
 
 
@@ -59,7 +60,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             var field = typeof(LocalizationText_TMP).GetField("mLabel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             field.SetValue(localizationTextTMP, tmp);
             EditorUtility.SetDirty(localizationTextTMP);
-            
+
 
         }
     }

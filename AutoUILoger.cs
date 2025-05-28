@@ -77,12 +77,13 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         // 最后程序结束时调用
         public static void Hint()
         {
+            AutoUIGroupLayerProcessor.ClearExistPrefabNames();
             if (LogWarningList.Count > 0)
             {
                 Log("=== 警告日志 ===");
                 foreach (string warning in LogWarningList)
                 {
-                    Log("警告汇总"+warning);
+                    Log("警告汇总" + warning);
                 }
             }
             if (hadWarnning)

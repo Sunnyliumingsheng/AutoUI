@@ -42,6 +42,11 @@
         "scene":{
             "description": "默认的场景",
             "path":"Assets/Scenes/Start.unity"
+        },
+        "prefab":{
+            "description": "默认的prefab的位置和名字",
+            "path":"Assets/Prefabs/UI",
+            "name":"test.prefab"
         }
     },
     "fontAssets": {

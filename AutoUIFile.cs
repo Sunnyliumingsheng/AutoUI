@@ -7,13 +7,37 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
     public class AutoUIFile : EditorWindow
     {
-        private static string prefabPath = "Assets/Prefabs/UI/test.prefab";
         // 保存一个gameobject为预制体，并返回其路径
         public static string SavePrefabAndCleanup(GameObject target)
         {
+            string prefabPath = AutoUIConfig.config.Default.Prefab.Path + "/" + AutoUIConfig.config.Default.Prefab.Name;
+            PrefabUtility.SaveAsPrefabAsset(target,prefabPath);
+            AssetDatabase.Refresh();
+            return prefabPath;
+        }
+        public static string SavePrefabAndCleanup(GameObject target, string name)
+        {
+            string prefabPath = AutoUIConfig.config.Default.Prefab.Path + "/" + name+".prefab";
             PrefabUtility.SaveAsPrefabAsset(target, prefabPath);
             AssetDatabase.Refresh();
             return prefabPath;
+        }
+        public static string SavePrefabAndConnect(GameObject target, string name)
+        {
+            string prefabPath = AutoUIConfig.config.Default.Prefab.Path + "/" + name + ".prefab";
+            PrefabUtility.SaveAsPrefabAssetAndConnect(target, prefabPath, InteractionMode.AutomatedAction);
+            AssetDatabase.Refresh();
+            return prefabPath;
+        }
+        public static GameObject LoadPrefab(string prefabName)
+        {
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AutoUIConfig.config.Default.Prefab.Path + "/" + prefabName + ".prefab");
+            if (prefab == null)
+            {
+                LogUtil.LogError("未找到名为" + prefabName + "的预制体");
+                return null;
+            }
+            return prefab;
         }
         public static string SelectFolderPath()
         {

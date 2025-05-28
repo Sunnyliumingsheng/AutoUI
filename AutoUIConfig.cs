@@ -47,6 +47,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public ButtonComponent ButtonComponent { get; set; }
         [JsonProperty("scene")]
         public Scene Scene { get; set; }
+        [JsonProperty("prefab")]
+        public Prefab Prefab { get; set; }
     }
 
     public class ButtonClickEffect
@@ -82,6 +84,16 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         [JsonProperty("path")]
         public string Path { get; set; }
+    }
+    public class Prefab
+    {
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("path")]
+        public string Path { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 
     public class FontAssets

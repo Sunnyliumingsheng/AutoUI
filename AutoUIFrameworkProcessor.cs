@@ -53,12 +53,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
 
         // 生成一个GameObject并处理默认的rectTransform信息
-        public static GameObject ProcessLayerFramework(in Layer layer, ref GameObject parent)
+        public static void ProcessLayerFramework(in Layer layer, ref GameObject newGameObject)
         {
-            Transform parentTransform = parent.transform;
-            GameObject layerGameObject = new GameObject(layer.name);
-            layerGameObject.transform.SetParent(parentTransform);
-            UnityEngine.RectTransform rectTransform = layerGameObject.AddComponent<UnityEngine.RectTransform>();
+
+            UnityEngine.RectTransform rectTransform = newGameObject.AddComponent<UnityEngine.RectTransform>();
             // 处理rectTransform
             if (layer.rectTransform != null)
             {
@@ -68,6 +66,25 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             {
                 LogUtil.LogError("出现错误,遇到rectTransform为null的情况");
             }
+        }
+        public static void PrefabProcessLayerFramework(in Layer layer, ref GameObject newGameObject)
+        {
+            UnityEngine.RectTransform rectTransform = newGameObject.GetComponent<UnityEngine.RectTransform>();
+            // 处理rectTransform
+            if (layer.rectTransform != null)
+            {
+                AutoUIRectTransformProcessor.RectTransformProcessor(ref rectTransform, in layer.rectTransform);
+            }
+            else
+            {
+                LogUtil.LogError("出现错误,遇到rectTransform为null的情况");
+            }
+        }
+        private static GameObject CreateNewGameObject(in Layer layer, ref GameObject parent)
+        {
+            Transform parentTransform = parent.transform;
+            GameObject layerGameObject = new GameObject(layer.name);
+            layerGameObject.transform.SetParent(parentTransform);
             return layerGameObject;
         }
 
@@ -76,34 +93,53 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         {
             foreach (var layer in layers)
             {
-                GameObject newGameObject = ProcessLayerFramework(in layer, ref parentGameObject);
-                switch (layer.eLayerKind)
-                {
-                    case ELayerKind.group:
+                if (layer.eLayerKind == ELayerKind.group && AutoUIGroupLayerProcessor.IsThisGroupAPrefab(in layer))
+                {// 如果这是一个prefab
+                    string prefabName = AutoUIGroupLayerProcessor.GetPrefabName(in layer);
+                    if (AutoUIGroupLayerProcessor.HaveThisPrefabExist(prefabName))
+                    {// 这是一个已经存在的prefab
+                        GameObject prefab = AutoUIFile.LoadPrefab(prefabName);
+                        GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+                        instance.transform.SetParent(parentGameObject.transform);
+                        PrefabProcessLayerFramework(in layer, ref instance);
+                        AutoUIGroupLayerProcessor.GroupLayerProcessor(in layer, ref instance);
+                    }
+                    else
+                    {// 这是一个新的prefab
+                        GameObject newGameObject = CreateNewGameObject(in layer, ref parentGameObject);
+                        ProcessLayerFramework(in layer, ref newGameObject);
+                        AutoUIGroupLayerProcessor.GroupLayerProcessor(in layer, ref newGameObject);
                         递归处理所有图层(in layer.layers, ref newGameObject);
-                        break;
-                    case ELayerKind.pixel:
-                        AutoUIPixelLayerProcessor.PixelLayerProcessor(in layer, ref newGameObject);
-                        break;
-                    case ELayerKind.text:
-                        AutoUITextLayerProcessor.TextLayerProcessor(in layer, ref newGameObject);
-                        break;
-                    default:
-                        LogUtil.LogWarning("初始化生成预制体时出现了无法解析的layer类型:" + layer.eLayerKind);
-                        break;
+                        string prefabPath = AutoUIFile.SavePrefabAndConnect(newGameObject,prefabName);
+                        AutoUIGroupLayerProcessor.AddPrefabToPrefabList(prefabName);
+                    }
                 }
-                if (layer.components != null)
-                {
-                    foreach (var component in layer.components)
+                else
+                {// 这是一个普通的layer
+                    GameObject newGameObject = CreateNewGameObject(in layer, ref parentGameObject);
+                    ProcessLayerFramework(in layer, ref newGameObject);
+                    switch (layer.eLayerKind)
                     {
-                        LogUtil.Log(component.ToString());
+                        case ELayerKind.group:
+                            AutoUIGroupLayerProcessor.GroupLayerProcessor(in layer, ref newGameObject);
+                            递归处理所有图层(in layer.layers, ref newGameObject);
+                            break;
+                        case ELayerKind.pixel:
+                            AutoUIPixelLayerProcessor.PixelLayerProcessor(in layer, ref newGameObject);
+                            break;
+                        case ELayerKind.text:
+                            AutoUITextLayerProcessor.TextLayerProcessor(in layer, ref newGameObject);
+                            break;
+                        default:
+                            LogUtil.LogWarning("初始化生成预制体时出现了无法解析的layer类型:" + layer.eLayerKind);
+                            break;
                     }
                 }
             }
         }
 
-        
-        
+
+
 
 
     }
