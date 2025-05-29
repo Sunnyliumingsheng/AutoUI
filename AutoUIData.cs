@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using System.Text;
 
 
@@ -40,7 +41,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         StretchTop,
         StretchCenter,
         StretchBottom
-        
+
     }
 
 
@@ -49,6 +50,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     {
         public float x;
         public float y;
+        public Vector2 ToVector2()
+        {
+            return new Vector2(x, y);
+        }
     }
     [System.Serializable]
     public class ColorRGB
@@ -120,8 +125,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 }
             }
         }
-        public ILayerData GetILayerData(){
-            switch (this.eLayerKind){
+        public ILayerData GetILayerData()
+        {
+            switch (this.eLayerKind)
+            {
                 case ELayerKind.canvas:
                     return this.canvasLayerData;
                 case ELayerKind.pixel:
@@ -131,7 +138,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 case ELayerKind.smartObject:
                     return this.smartObjectLayerData;
                 default:
-                    LogUtil.LogError(" 试图获取ILayerData接口但是遇到了无法解析的elayerKind:"+this.eLayerKind);
+                    LogUtil.LogError(" 试图获取ILayerData接口但是遇到了无法解析的elayerKind:" + this.eLayerKind);
                     return null;
             }
         }
@@ -140,54 +147,14 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
     [System.Serializable]
     public class RectTransform
     {
-        public string type;
         public NormalizedPoint[] anchor = new NormalizedPoint[2];
         public NormalizedPoint pivot;
-        public MiddleCenterMode middleCenterModeData;
-        public StretchStretchMode stretchStretchModeData;
-        public IUICoordinateSystem GetIUICoordinateSystem()
-        {
-            if (this.middleCenterModeData != null)
-            {
-                return this.middleCenterModeData;
-            }
-           if (this.stretchStretchModeData!= null){
-                return this.stretchStretchModeData;
-           }
-           LogUtil.LogError(" 试图获取IUICoordinateSystem接口但是遇到了无法解析的rectTransform");
-           return null;
-        }
+        public NormalizedPoint anchoredPosition;
+        public NormalizedPoint sizeDelta;
+        public NormalizedPoint offsetMin;
+        public NormalizedPoint offsetMax;
     }
 
-
-    public interface IUICoordinateSystem
-    {
-        public ERectTransformMode GetMode();
-    }
-    [System.Serializable]
-    public class StretchStretchMode : IUICoordinateSystem
-    {
-        public float top;
-        public float bottom;
-        public float left;
-        public float right;
-        public ERectTransformMode GetMode()
-        {
-            return ERectTransformMode.stretchStretch;
-        }
-    }
-    [System.Serializable]
-    public class MiddleCenterMode : IUICoordinateSystem
-    {
-        public float posX;
-        public float posY;
-        public float width;
-        public float height;
-        public ERectTransformMode GetMode()
-        {
-            return ERectTransformMode.middleCenter;
-        }
-    }
     public interface ILayerData { }
 
     [System.Serializable]
