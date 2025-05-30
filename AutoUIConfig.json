@@ -1,6 +1,72 @@
 {
     "testMode": true,
     "components": {
+        "universal":[
+            {
+                "name":"horizontalAnchor",
+                "description":"手动选择锚点,默认位置是中间",
+                "appearance":"手动选择锚点左右",
+                "type":"radioGroup",
+                "parameters":[
+                    {
+                        "name":"left",
+                        "description":"锚点靠在左边",
+                        "type":"radio",
+                        "appearance":"靠左"
+                    },
+                    {
+                        "name":"right",
+                        "description":"锚点靠在右边",
+                        "type":"radio",
+                        "appearance":"靠右"
+                    },
+                    {
+                        "name":"center",
+                        "description":"水平居中",
+                        "type":"radio",
+                        "appearance":"水平居中"
+                    },
+                    {
+                        "name":"stretch",
+                        "description":"拉伸",
+                        "type":"radio",
+                        "appearance":"拉伸"
+                    }
+                ]
+            },
+            {
+                "name":"verticalAnchor",
+                "description":"手动选择锚点,默认位置是中间",
+                "appearance":"手动选择锚点上下",
+                "type":"radioGroup",
+                "parameters":[
+                    {
+                        "name":"bottom",
+                        "description":"锚点靠在底部",
+                        "type":"radio",
+                        "appearance":"靠下"
+                    },
+                    {
+                        "name":"top",
+                        "description":"锚点靠在顶部",
+                        "type":"radio",
+                        "appearance":"靠上"
+                    },
+                    {
+                        "name":"middle",
+                        "description":"竖直居中",
+                        "type":"radio",
+                        "appearance":"竖直居中"
+                    },
+                    {
+                        "name":"stretch",
+                        "description":"拉伸",
+                        "type":"radio",
+                        "appearance":"拉伸"
+                    }
+                ]
+            }   
+        ],
         "group": [
             {
                 "name": "prefab",
@@ -33,6 +99,9 @@
                 "type":"checkbox",
                 "parameters":[]
             }
+        ],
+        "pixel":[
+            
         ]
     },
     "default": {
@@ -40,15 +109,15 @@
             "description": "是否在文本内容中使用到本地化支持组件",
             "isUseLocalization": true
         },
-        "buttonClickEffect": {
+        "radioClickEffect": {
             "EnableClickEffect": true,
             "description": "是否启用点击效果脚本",
-            "componentName": "ButtonClickEffect",
-            "componentPath": "Packages/com.tuyoo.tuyooframework/Unity/UI/Components/ButtonClickEffect.cs"
+            "componentName": "radioClickEffect",
+            "componentPath": "Packages/com.tuyoo.tuyooframework/Unity/UI/Components/radioClickEffect.cs"
         },
-        "buttonComponent": {
+        "radioComponent": {
             "useComponent": false,
-            "description": "按钮有两种常见的实现方式一种是用buttonTemplate预制体一种是直接使用button的组件,暂时不支持buttonTemplate",
+            "description": "按钮有两种常见的实现方式一种是用radioTemplate预制体一种是直接使用radio的组件,暂时不支持radioTemplate",
             "prefabPath": "unsupport"
         },
         "scene": {
@@ -59,6 +128,11 @@
             "description": "默认的prefab的位置和名字",
             "path": "Assets/Prefabs/UI",
             "name": "test.prefab"
+        },
+        "screen":{
+            "description": "默认的屏幕长宽,如果不设置这个,会默认采用PS中PSD的width和height,如果不想设置这个,可以设置为0,0作为不采用的值",
+            "width":750,
+            "height":1334
         }
     },
     "fontAssets": {
