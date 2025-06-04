@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Tools.Editor.AutoUI
 {
@@ -25,6 +26,26 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 {// 如果使用点击效果
                     newGameObject.AddComponent<UnityFramework.ButtonClickEffect>();
                 }
+            }
+
+            // 处理layout
+            if (AutoUIUtil.IsComponentExist(in layer, "grid"))
+            {
+                newGameObject.AddComponent<UnityEngine.UI.GridLayoutGroup>();
+                // 自动推导gridLayout的参数
+                AutoUILayoutProcessor.GridLayout参数自动推导(in layer, ref newGameObject);
+            }
+            if (AutoUIUtil.IsComponentExist(in layer, "horizontalLayout"))
+            {
+                newGameObject.AddComponent<UnityEngine.UI.HorizontalLayoutGroup>();
+                // 自动推导horizontalLayout的参数
+                AutoUILayoutProcessor.ApplyHorizontalLayout(in layer, ref newGameObject);
+            }
+            if (AutoUIUtil.IsComponentExist(in layer, "verticalLayout"))
+            {
+                newGameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
+                // 自动推导verticalLayout的参数
+                AutoUILayoutProcessor.ApplyVerticalLayout(in layer, ref newGameObject);
             }
 
         }
@@ -88,5 +109,5 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
 
     }
-    
+
 }

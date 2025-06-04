@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using UnityEditor.Localization.Editor;
+using UnityEditor.Overlays;
 using UnityEditor.SearchService;
 
 
@@ -52,8 +53,16 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public PrefabInfo Prefab { get; set; }
         [JsonProperty("localization")]
         public Localization Localization { get; set; }
+        [JsonProperty("layout")]
+        public Assets.Scripts.Tools.Editor.AutoUI.Layout Layout { get; set; }
     }
-    public class Localization {
+    public class Layout
+    {
+        [JsonProperty("padding")]
+        public int Padding { get; set; }
+    }
+    public class Localization
+    {
         [JsonProperty("description")]
         public string Description { get; set; }
         [JsonProperty("isUseLocalization")]

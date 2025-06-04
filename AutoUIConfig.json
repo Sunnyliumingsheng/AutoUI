@@ -1,71 +1,71 @@
 {
     "testMode": true,
     "components": {
-        "universal":[
+        "universal": [
             {
-                "name":"horizontalAnchor",
-                "description":"手动选择锚点,默认位置是中间",
-                "appearance":"手动选择锚点左右",
-                "type":"radioGroup",
-                "parameters":[
+                "name": "horizontalAnchor",
+                "description": "手动选择锚点,默认位置是中间",
+                "appearance": "手动选择锚点左右",
+                "type": "radioGroup",
+                "parameters": [
                     {
-                        "name":"left",
-                        "description":"锚点靠在左边",
-                        "type":"radio",
-                        "appearance":"靠左"
+                        "name": "left",
+                        "description": "锚点靠在左边",
+                        "type": "radio",
+                        "appearance": "靠左"
                     },
                     {
-                        "name":"right",
-                        "description":"锚点靠在右边",
-                        "type":"radio",
-                        "appearance":"靠右"
+                        "name": "right",
+                        "description": "锚点靠在右边",
+                        "type": "radio",
+                        "appearance": "靠右"
                     },
                     {
-                        "name":"center",
-                        "description":"水平居中",
-                        "type":"radio",
-                        "appearance":"水平居中"
+                        "name": "center",
+                        "description": "水平居中",
+                        "type": "radio",
+                        "appearance": "水平居中"
                     },
                     {
-                        "name":"stretch",
-                        "description":"拉伸",
-                        "type":"radio",
-                        "appearance":"拉伸"
+                        "name": "stretch",
+                        "description": "拉伸",
+                        "type": "radio",
+                        "appearance": "拉伸"
                     }
                 ]
             },
             {
-                "name":"verticalAnchor",
-                "description":"手动选择锚点,默认位置是中间",
-                "appearance":"手动选择锚点上下",
-                "type":"radioGroup",
-                "parameters":[
+                "name": "verticalAnchor",
+                "description": "手动选择锚点,默认位置是中间",
+                "appearance": "手动选择锚点上下",
+                "type": "radioGroup",
+                "parameters": [
                     {
-                        "name":"bottom",
-                        "description":"锚点靠在底部",
-                        "type":"radio",
-                        "appearance":"靠下"
+                        "name": "bottom",
+                        "description": "锚点靠在底部",
+                        "type": "radio",
+                        "appearance": "靠下"
                     },
                     {
-                        "name":"top",
-                        "description":"锚点靠在顶部",
-                        "type":"radio",
-                        "appearance":"靠上"
+                        "name": "top",
+                        "description": "锚点靠在顶部",
+                        "type": "radio",
+                        "appearance": "靠上"
                     },
                     {
-                        "name":"middle",
-                        "description":"竖直居中",
-                        "type":"radio",
-                        "appearance":"竖直居中"
+                        "name": "middle",
+                        "description": "竖直居中",
+                        "type": "radio",
+                        "appearance": "竖直居中"
                     },
                     {
-                        "name":"stretch",
-                        "description":"拉伸",
-                        "type":"radio",
-                        "appearance":"拉伸"
+                        "name": "stretch",
+                        "description": "拉伸",
+                        "type": "radio",
+                        "appearance": "拉伸"
                     }
                 ]
-            }   
+            }
         ],
         "group": [
             {
@@ -89,23 +89,62 @@
                 "appearance": "设置为按钮",
                 "type": "checkbox",
                 "parameters": []
+            },
+            {
+                "name": "横竖排列布局",
+                "description": "这个组将成为一个横的或者竖的布局",
+                "appearance": "布局",
+                "type": "radioGroup",
+                "parameters": [
+                    {
+                        "name": "horizontalLayout",
+                        "description": "水平布局",
+                        "appearance": "水平布局",
+                        "type": "radio"
+                    },
+                    {
+                        "name": "verticalLayout",
+                        "description": "竖直布局",
+                        "appearance": "竖直布局",
+                        "type": "radio"
+                    }
+                ]
+            },{
+                "name":"grid",
+                "description":"网格布局,注意这里的横列都只能有一个非0,否则会默认采用行数为0.如果两个都是0,则不会生效。我推荐一律使用规定列数的方式。手机一般都是这样的。",
+                "appearance":"网格布局",
+                "type":"checkbox",
+                "parameters":[
+                    {
+                        "name":"column",
+                        "description":"列数",
+                        "appearance":"列数",
+                        "type":"number",
+                        "default":0
+                    },
+                    {
+                        "name":"row",
+                        "description":"行数",
+                        "appearance":"行数",
+                        "type":"number",
+                        "default":0
+                    }
+                ]
             }
         ],
         "text": [
             {
-                "name":"title",
-                "description":"在unity中使用标题字体",
-                "appearance":"在unity中使用标题字体",
-                "type":"checkbox",
-                "parameters":[]
+                "name": "title",
+                "description": "在unity中使用标题字体",
+                "appearance": "在unity中使用标题字体",
+                "type": "checkbox",
+                "parameters": []
             }
         ],
-        "pixel":[
-            
-        ]
+        "pixel": []
     },
     "default": {
-        "localization":{
+        "localization": {
             "description": "是否在文本内容中使用到本地化支持组件",
             "isUseLocalization": true
         },
@@ -129,10 +168,14 @@
             "path": "Assets/Prefabs/UI",
             "name": "test.prefab"
         },
-        "screen":{
+        "screen": {
             "description": "默认的屏幕长宽,如果不设置这个,会默认采用PS中PSD的width和height,如果不想设置这个,可以设置为0,0作为不采用的值",
-            "width":750,
-            "height":1334
+            "width": 750,
+            "height": 1334
+        },
+        "layout": {
+            "description": "layout 组建的一些默认设置",
+            "padding": 0
         }
     },
     "fontAssets": {

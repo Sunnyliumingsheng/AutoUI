@@ -89,7 +89,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
         public void VerifyLayers()
         {
-            LogUtil.Log("=== 开始进行验证 ===");
+            LogUtil.Log("=== 开始进行图层种类验证 ===");
             if (this.eLayerKind == ELayerKind.group || this.eLayerKind == ELayerKind.canvas)
             {
                 recusionLayers(this.layers);
