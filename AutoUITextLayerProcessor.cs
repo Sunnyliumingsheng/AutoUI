@@ -16,7 +16,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             tmp.text = layer.textLayerData.text;
 
             // 字体大小
-            tmp.fontSize = Mathf.RoundToInt(layer.textLayerData.fontSize);
+            tmp.fontSize = Mathf.RoundToInt(CorrectSizeValue(layer.textLayerData.fontSize));
 
             // 字体资源
             TMP_FontAsset tmpFontAsset = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(AutoUIConfig.config.FontAssets.Default.Path);
@@ -47,7 +47,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
 
             // 是否换行 todo 在PS中开发一下这个获取的功能
-            tmp.enableWordWrapping = false;
+            tmp.enableWordWrapping = layer.textLayerData.warp;
 
 
             /////// 添加组件
@@ -91,5 +91,14 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             tmp.ForceMeshUpdate();  // <-- 这个非常重要
             AssetDatabase.SaveAssets();
         }
+        public static float CorrectSizeValue(float value)
+        {
+            if (AutoUIConfig.config.Default.Font.EnableCorrect)
+            {
+                value *= AutoUIConfig.config.Default.Font.CorrectValue;
+            }
+            return value;
+        }
     }
+
 }

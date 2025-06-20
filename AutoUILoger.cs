@@ -71,7 +71,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             ShowErrorDialog("出现错误", err.Message);
             Log($"[错误] {err.Message} ");
             Log("stackTrace:" + err.StackTrace);
-
+            Hint();
         }
 
         // 最后程序结束时调用

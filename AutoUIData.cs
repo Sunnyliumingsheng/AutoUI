@@ -172,6 +172,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public ColorRGB color;
         public string textAlign;
         public bool haveShadow;
+        public bool warp;
     }
 
     [System.Serializable]

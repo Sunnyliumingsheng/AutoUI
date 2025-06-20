@@ -109,25 +109,26 @@
                         "type": "radio"
                     }
                 ]
-            },{
-                "name":"grid",
-                "description":"网格布局,注意这里的横列都只能有一个非0,否则会默认采用行数为0.如果两个都是0,则不会生效。我推荐一律使用规定列数的方式。手机一般都是这样的。",
-                "appearance":"网格布局",
-                "type":"checkbox",
-                "parameters":[
+            },
+            {
+                "name": "grid",
+                "description": "网格布局,注意这里的横列都只能有一个非0,否则会默认采用行数为0.如果两个都是0,则不会生效。我推荐一律使用规定列数的方式。手机一般都是这样的。",
+                "appearance": "网格布局",
+                "type": "checkbox",
+                "parameters": [
                     {
-                        "name":"column",
-                        "description":"列数",
-                        "appearance":"列数",
-                        "type":"number",
-                        "default":0
+                        "name": "column",
+                        "description": "列数",
+                        "appearance": "列数",
+                        "type": "number",
+                        "default": 0
                     },
                     {
-                        "name":"row",
-                        "description":"行数",
-                        "appearance":"行数",
-                        "type":"number",
-                        "default":0
+                        "name": "row",
+                        "description": "行数",
+                        "appearance": "行数",
+                        "type": "number",
+                        "default": 0
                     }
                 ]
             }
@@ -148,15 +149,15 @@
             "description": "是否在文本内容中使用到本地化支持组件",
             "isUseLocalization": true
         },
-        "radioClickEffect": {
+        "buttonClickEffect": {
             "EnableClickEffect": true,
             "description": "是否启用点击效果脚本",
-            "componentName": "radioClickEffect",
-            "componentPath": "Packages/com.tuyoo.tuyooframework/Unity/UI/Components/radioClickEffect.cs"
+            "componentName": "buttonClickEffect",
+            "componentPath": "Packages/com.tuyoo.tuyooframework/Unity/UI/Components/buttonClickEffect.cs"
         },
-        "radioComponent": {
+        "buttonComponent": {
             "useComponent": false,
-            "description": "按钮有两种常见的实现方式一种是用radioTemplate预制体一种是直接使用radio的组件,暂时不支持radioTemplate",
+            "description": "按钮有两种常见的实现方式一种是用buttonTemplate预制体一种是直接使用button的组件,暂时不支持buttonTemplate",
             "prefabPath": "unsupport"
         },
         "scene": {
@@ -176,6 +177,11 @@
         "layout": {
             "description": "layout 组建的一些默认设置",
             "padding": 0
+        },
+        "font": {
+            "enableCorrect": true,
+            "CorrectValue": 0.75,
+            "description": "Unity 中文字字号是“理论值”，实际显示时会因为字体边界、内边距、贴图放缩、Canvas 缩放等机制，导致视觉效果比 Photoshop 更大、更松。故而需要进行比例修正"
         }
     },
     "fontAssets": {

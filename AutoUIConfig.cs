@@ -55,6 +55,15 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public Localization Localization { get; set; }
         [JsonProperty("layout")]
         public Assets.Scripts.Tools.Editor.AutoUI.Layout Layout { get; set; }
+        [JsonProperty("font")]
+        public Assets.Scripts.Tools.Editor.AutoUI.Font Font{ get; set; }
+    }
+    public class Font
+    {
+        [JsonProperty("enableCorrect")]
+        public bool EnableCorrect { get; set; }
+        [JsonProperty("correctValue")]
+        public float CorrectValue { get; set; }
     }
     public class Layout
     {
