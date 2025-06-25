@@ -35,3 +35,6 @@ believe or not
 特殊处理分为两个部分，一是所有的图层，都需要进行一个处理，这个时候可以进行第一次对图层的特殊处理
 二是组件和图层的组合，第二次进行遍历UI树的时候，如果分为匹配和处理阶段，如果这个对象的信息能和匹配函数匹配，就会进行处理操作。
 总之，分为通用图层处理和匹配处理两个阶段。
+
+最后请看最新版的分支mywar3
+还有介绍视频https://www.bilibili.com/video/BV1xRKSznEqr/?spm_id_from=333.1387.homepage.video_card.click&vd_source=dd62d3fdfa20a2a7ea6103aa18e01fa1
