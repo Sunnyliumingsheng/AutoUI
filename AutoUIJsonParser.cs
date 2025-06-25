@@ -19,7 +19,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         }
         private static void handleList(Layer layer)
         {
-            layer.eLayerKind = GetELayerKind(layer.layerKind);
+            layer.eLayerKind = GetELayerKind(layer.layerKind,layer.name);
         }
         private static void RecursionInit(List<Layer> layers)
         {
@@ -33,7 +33,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
         }
         // 自定义的部分
-        private static ELayerKind GetELayerKind(string layerKind)
+        private static ELayerKind GetELayerKind(string layerKind,string layerName)
         {
             switch (layerKind)
             {
@@ -48,7 +48,13 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 case "text":
                     return ELayerKind.text;
                 default:
-                    LogUtil.LogError("处理层级类型的时候出现了错误,"+layerKind);
+                    if (layerKind == null)
+                    {
+                        LogUtil.LogError("处理层级类型的时候出现了错误,根本没有设置layerking,层级名为"+layerName);
+                        return ELayerKind.pixel;
+                    }
+                    LogUtil.LogError("处理层级类型的时候出现了错误,"+layerKind+"层级名为"+layerName);
+                    
                     return ELayerKind.pixel;
             }
         }
