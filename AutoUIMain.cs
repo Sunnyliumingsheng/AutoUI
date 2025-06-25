@@ -29,19 +29,19 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                 try
                 {
                     LogUtil.ClearLogFile();
+                    AutoUIConfig.GetAutoUIConfigData();
                     selectedFolderPath = AutoUIFile.SelectFolderPath();
                     if (string.IsNullOrEmpty(selectedFolderPath))
                     {
                         LogUtil.LogError("解析终止，因为未选择有效的文件夹路径。");
                         return;
                     }
-                    selectedJsonPath = selectedFolderPath + "/data.json";
+                    selectedJsonPath = selectedFolderPath + "/" + AutoUIConfig.config.Default.Data.Name;
                     if (!AutoUIFile.IsJsonFileExist(selectedFolderPath))
                     {
                         LogUtil.LogError("解析终止，因为未选择有效的 JSON 文件路径。");
                         return;
                     }
-                    AutoUIConfig.GetAutoUIConfigData();
                     imageNameToSpritePath = new Dictionary<string, string>();
                 }
                 catch (Exception err)

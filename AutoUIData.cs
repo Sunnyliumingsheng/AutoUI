@@ -173,14 +173,12 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public string textAlign;
         public bool haveShadow;
         public bool warp;
+        public float rotation;
     }
 
     [System.Serializable]
     public class SmartObjectLayer : ILayerData
     {
-        public float width;
-        public float height;
-        public string fileReference;
         public string kind;
     }
 

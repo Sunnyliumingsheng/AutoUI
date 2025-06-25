@@ -49,6 +49,15 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             // 是否换行 todo 在PS中开发一下这个获取的功能
             tmp.enableWordWrapping = layer.textLayerData.warp;
 
+            // 文本的旋转
+            tmp.rectTransform.rotation = Quaternion.Euler(0, 0, layer.textLayerData.rotation);
+
+            // 一般来说文本的旋转如果是0那么肯定就需要文本居中，此类文字基本都是以tips的形式出现
+            if (layer.textLayerData.rotation != 0)
+            {
+                tmp.alignment = TextAlignmentOptions.Center;
+            }
+
 
             /////// 添加组件
 

@@ -145,6 +145,10 @@
         "pixel": []
     },
     "default": {
+        "data":{
+            "name":"data.json",
+            "description":"在选择了某文件夹后，会自动寻找对应name的json文件,并解析，为什么是选择文件夹？这是个历史遗留问题，但是不改问题也不大，而且可扩展性变强了"
+        },
         "localization": {
             "description": "是否在文本内容中使用到本地化支持组件",
             "isUseLocalization": true

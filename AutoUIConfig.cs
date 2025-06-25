@@ -40,6 +40,8 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
 
     public class DefaultConfig
     {
+        [JsonProperty("data")]
+        public Data Data { get; set; }
         [JsonProperty("buttonClickEffect")]
         public ButtonClickEffect ButtonClickEffect { get; set; }
 
@@ -57,6 +59,11 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         public Assets.Scripts.Tools.Editor.AutoUI.Layout Layout { get; set; }
         [JsonProperty("font")]
         public Assets.Scripts.Tools.Editor.AutoUI.Font Font{ get; set; }
+    }
+    public class Data
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
     public class Font
     {

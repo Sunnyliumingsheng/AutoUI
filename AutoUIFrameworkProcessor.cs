@@ -64,7 +64,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
             else
             {
-                LogUtil.LogError("出现错误,遇到rectTransform为null的情况");
+                LogUtil.LogError("出现错误,遇到rectTransform为null的情况,图层名为"+layer.name);
             }
         }
         public static void PrefabProcessLayerFramework(in Layer layer, ref GameObject newGameObject)
@@ -77,7 +77,7 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
             }
             else
             {
-                LogUtil.LogError("出现错误,遇到rectTransform为null的情况");
+                LogUtil.LogError("出现错误,遇到rectTransform为null的情况,图层名为"+layer.name);
             }
         }
         private static GameObject CreateNewGameObject(in Layer layer, ref GameObject parent)
@@ -131,6 +131,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
                             break;
                         case ELayerKind.text:
                             AutoUITextLayerProcessor.TextLayerProcessor(in layer, ref newGameObject);
+                            break;
+                        case ELayerKind.smartObject:
+                            AutoUISmartObjectLayerProcessor.SmartObjectLayerProcessor(in layer, ref newGameObject);
                             break;
                         default:
                             LogUtil.LogWarning("初始化生成预制体时出现了无法解析的layer类型:" + layer.eLayerKind);

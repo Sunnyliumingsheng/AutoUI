@@ -91,11 +91,10 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         {
             foreach (var layer in layers)
             {
-                if (layer.eLayerKind == ELayerKind.pixel)
+                if (layer.eLayerKind == ELayerKind.pixel || layer.eLayerKind==ELayerKind.smartObject)
                 {
                     AssetsName.Add(layer.name);
                 }
-                // todo : 添加对智能对象的支持
                 if (layer.eLayerKind == ELayerKind.group)
                 {
                     RecursionInit(layer.layers);
