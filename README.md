@@ -11,7 +11,8 @@
 
 你可以看到仅仅只有文字没有显示出来，这是字体的原因，只要在config.json中配置好字体并稍微修改代码即可
 - 再次展示
-![image](https://github.com/user-attachments/assets/eac5866f-1676-435b-8a6f-a584835ec63d)
+![Screenshot 2025-05-20 103229](https://github.com/user-attachments/assets/0a961998-7dff-4628-9dd3-2814c68a6e46)
+![Screenshot 2025-06-25 154142](https://github.com/user-attachments/assets/ae59cd2e-9b0c-4fac-ae5a-ec7c3d73f6c2)
 
 ### 使用说明
 https://github.com/Sunnyliumingsheng/AutoUI/blob/main/%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C.md
