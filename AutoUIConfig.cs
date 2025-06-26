@@ -8,7 +8,7 @@ using UnityEditor.SearchService;
 
 
 
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
     public class AutoUIConfig
     {
@@ -56,9 +56,9 @@ namespace Assets.Scripts.Tools.Editor.AutoUI
         [JsonProperty("localization")]
         public Localization Localization { get; set; }
         [JsonProperty("layout")]
-        public Assets.Scripts.Tools.Editor.AutoUI.Layout Layout { get; set; }
+        public Layout Layout { get; set; }
         [JsonProperty("font")]
-        public Assets.Scripts.Tools.Editor.AutoUI.Font Font{ get; set; }
+        public Font Font{ get; set; }
     }
     public class Data
     {

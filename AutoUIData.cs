@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Tuyoo.Render;
 
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
     public class MyComponent
     {

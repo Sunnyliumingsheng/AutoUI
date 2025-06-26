@@ -151,10 +151,10 @@
         },
         "localization": {
             "description": "是否在文本内容中使用到本地化支持组件",
-            "isUseLocalization": true
+            "isUseLocalization": false
         },
         "buttonClickEffect": {
-            "EnableClickEffect": true,
+            "EnableClickEffect": false,
             "description": "是否启用点击效果脚本",
             "componentName": "buttonClickEffect",
             "componentPath": "Packages/com.tuyoo.tuyooframework/Unity/UI/Components/buttonClickEffect.cs"

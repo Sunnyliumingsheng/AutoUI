@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 
 // 命名有点失误了，这里的sprite和assets混用了，虽然在这里这两者的意思差不多
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
     public enum EFindAssetStatus
     {

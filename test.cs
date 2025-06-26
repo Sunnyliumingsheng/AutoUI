@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Tuyoo.Render;
-using Assets.Scripts.Tools.Editor.AutoUI;
+using AutoUI;
 
 
 public class JsonToUIPrefabCreator : EditorWindow

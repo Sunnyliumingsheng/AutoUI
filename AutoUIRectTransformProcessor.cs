@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
 
 

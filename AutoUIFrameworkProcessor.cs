@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityFramework;
 
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
 
     // 进行初步处理，得到一个大概的外观和框架

@@ -1,6 +1,6 @@
 using UnityEditor;
 using UnityEngine;
-using Assets.Scripts.Tools.Editor.AutoUI;
+using AutoUI;
 public class CustomContextMenu
 {
     [MenuItem("GameObject/打印rectTransform信息", false, 0)]

@@ -5,7 +5,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
     public class AutoUIImagesImportProcessor : EditorWindow
     {

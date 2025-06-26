@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
     // 这个类是一个对Pixel进行处理的元操作
     public class AutoUIPictureTool

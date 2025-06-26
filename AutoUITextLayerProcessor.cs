@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityFramework;
 
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
     public class AutoUITextLayerProcessor
     {

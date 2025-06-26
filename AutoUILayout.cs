@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
     public class AutoUILayoutProcessor
     {

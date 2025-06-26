@@ -1,6 +1,6 @@
 using UnityEditor;
 using UnityEngine;
-using Assets.Scripts.Tools.Editor.AutoUI;
+using AutoUI;
 using System.IO;
 using System.Collections.Generic;
 

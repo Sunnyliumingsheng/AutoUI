@@ -1,7 +1,7 @@
 using UnityEngine.UI;
 using UnityEditor;
 using UnityEngine.EventSystems;
-using Assets.Scripts.Tools.Editor.AutoUI;
+using AutoUI;
 using UnityEngine;
 
 public class AutoUIScrollCreator

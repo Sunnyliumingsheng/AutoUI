@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 
-namespace Assets.Scripts.Tools.Editor.AutoUI
+namespace AutoUI
 {
     public static class LogUtil
     {
