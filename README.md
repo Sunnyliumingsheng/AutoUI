@@ -1,56 +1,40 @@
-# 目前的最新版本
-**效果已经很爽了**
-首先需要拉取这个脚本，然后到PS插件市场中下载我的插件，
+# AutoUI
 
+- main分支为的通用版本
+- mywar分支为mywar的专属版本
+但是推荐还是使用mywar的最新分支，非常好用
 
-主要更新内容
-‒ 配置表共用，PS端和Unity端共用一个配置表，考虑将配置表放在服务器上，共享配置表。
-‒ 配表模式，PS端根据配置内容动态生成面板样式，简单的添加标记，Unity端可以很方便的对标记添加处理功能。不再写死功能，可扩展性大大增强
-‒ prefab支持，不再只有一个prefab，而是可以通过标记，将内容标记为一个prefab
-![image](https://github.com/user-attachments/assets/d3a97743-dfc4-479e-9136-f9c69b0e6de1)
-![image](https://github.com/user-attachments/assets/583e69a1-08d4-452a-9f3d-45e2870bd300)
+### 普通版最终效果
+- ps中的图片
+ ![image](https://github.com/user-attachments/assets/49496d06-3c94-42a0-bc0c-aef3dcaa512f)
 
+- 导入到unity中的效果
+ ![屏幕截图 2025-04-29 213501](https://github.com/user-attachments/assets/5c33627f-9dce-4a61-afc2-a21f933076e3)
 
+你可以看到仅仅只有文字没有显示出来，这是字体的原因，只要在config.json中配置好字体并稍微修改代码即可
 
-演示和记录新增组件流程
-新增标题组件
-描述：希望美术选择采用哪种字体，现有title和main text ，之前是根据美术惯例，提取PS中使用的字体，从而大概知道是标题还是正文。现在希望不依赖规则，而是让美术手动选择。
-一 修改config.json
-找到text列表，添加以下内容
-![image](https://github.com/user-attachments/assets/13577c93-67e2-4d93-9eaf-d9b86feff162)
+### 使用说明
+https://github.com/Sunnyliumingsheng/PSDexport
+首先利用我的PS插件，栅格化所有图层，然后提取到json和图片保存到一个文件夹中
+进入unity，打开tools中的AutoUI，之后选中文件夹
+就能自动生成一个UI prefab
 
-PS面板会识别到这个新增配置并在点击文字图层的时候捕获到事件，然后生成面板
-![image](https://github.com/user-attachments/assets/adc0f1e8-39f0-4efb-9891-51d649428501)
+### 图层识别
+我推荐将所有图片图层都格栅化为像素图层。
+矢量图层完全是不支持的。unity中不能做到
+虽然对智能对象有支持，但是我认为非常容易出错
+美术很容易因为各种原因修改了文件名，映射关系很容易出错，等等原因会造成如下类似报错
+AutoUI Error:像素图层的图片依赖引用名称不存在:SP_Hero_Bg_02
 
-二 修改Unity脚本文件
-只需要找到AutoUITextLayerProcessor文件，在TextLayerProcessor函数中添加如下语句即可
-![image](https://github.com/user-attachments/assets/cb22844a-f65c-47f3-95af-49869c7469c2)
+但是使用像素图层完全不会发生这种事情，因为像素图层美术按照名字命名并不是一件难事
 
-整个流程可谓及其简单化，可扩展性大大增加。
+如果执意要使用智能对象图层，可以将报错改为警告。。。。
+believe or not
 
-添加按钮支持
-描述：一般情况下，按钮都是在一个组图层上实现(逻辑与样式分离)所以只需要在组图层新增一个新的checkbox，另外注意到很多按钮都用到了一个写好的按钮效果脚本ButtonClickEffect.cs 需要在配置中动态设置新增这个按钮效果的配置。
-一 修改config.json
-找到group列表，新增一条按钮的checkbox
-二 修改Unity脚本
-找到AutoUIGroupLayerProcessor.cs的GroupLayerProcessor函数
-新增内容
-![image](https://github.com/user-attachments/assets/71d12f1d-367e-489b-9c3e-f4a5a312ba49)
+### 特殊处理处理
+特殊处理分为两个部分，一是所有的图层，都需要进行一个处理，这个时候可以进行第一次对图层的特殊处理
+二是组件和图层的组合，第二次进行遍历UI树的时候，如果分为匹配和处理阶段，如果这个对象的信息能和匹配函数匹配，就会进行处理操作。
+总之，分为通用图层处理和匹配处理两个阶段。
 
-效果展示
-title设置成功
-![image](https://github.com/user-attachments/assets/4a010ca6-4121-4110-a80b-277c1dc98958)
-
-button设置成功
-![image](https://github.com/user-attachments/assets/49d9d2b6-51ed-4d2f-b796-8ffeb2d524c4)
-
-以上两个组件的添加和测试只花了我50分钟，可以说是很快了。如果熟悉Unity各种组件我相信会更快
-
-
-存在的问题
-美术必须明白最基础的Unity排版和组件功能，否则经常出现样式很对，但是层级关系不行不能使用的问题
-例如，美术经常做一种操作，将文字放到一个组中，将图片放到一个组中，实际上应该是分出很多组，然后每个组中有一个文字和图片。
-
-
-如果有更多的问题，请咨询 wechat yang15279925030
-我目前还没上架插件市场，因为adobe太麻烦了，如果有需要我会私发给你。如果有公司想使用……我其实很想小赚一笔
+最后请看最新版的分支mywar3
+还有介绍视频https://www.bilibili.com/video/BV1xRKSznEqr/?spm_id_from=333.1387.homepage.video_card.click&vd_source=dd62d3fdfa20a2a7ea6103aa18e01fa1
