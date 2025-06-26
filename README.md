@@ -1,8 +1,6 @@
 # AutoUI
 
 - main分支为的通用版本
-- mywar分支为mywar的专属版本
-但是推荐还是使用mywar的最新分支，非常好用
 
 ### 普通版最终效果
 - ps中的图片
@@ -36,5 +34,5 @@ believe or not
 二是组件和图层的组合，第二次进行遍历UI树的时候，如果分为匹配和处理阶段，如果这个对象的信息能和匹配函数匹配，就会进行处理操作。
 总之，分为通用图层处理和匹配处理两个阶段。
 
-最后请看最新版的分支mywar3
-还有介绍视频https://www.bilibili.com/video/BV1xRKSznEqr/?spm_id_from=333.1387.homepage.video_card.click&vd_source=dd62d3fdfa20a2a7ea6103aa18e01fa1
+还有介绍视频这个介绍视频讲了常见的错误使用和基本的流程
+https://www.bilibili.com/video/BV1xRKSznEqr/?spm_id_from=333.1387.homepage.video_card.click&vd_source=dd62d3fdfa20a2a7ea6103aa18e01fa1
