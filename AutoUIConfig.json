@@ -151,7 +151,7 @@
         },
         "localization": {
             "description": "是否在文本内容中使用到本地化支持组件",
-            "isUseLocalization": false
+            "isUseLocalization": true
         },
         "buttonClickEffect": {
             "EnableClickEffect": false,
@@ -184,32 +184,32 @@
         },
         "font": {
             "enableCorrect": true,
-            "CorrectValue": 0.75,
+            "CorrectValue": 1,
             "description": "Unity 中文字字号是“理论值”，实际显示时会因为字体边界、内边距、贴图放缩、Canvas 缩放等机制，导致视觉效果比 Photoshop 更大、更松。故而需要进行比例修正"
         }
     },
     "fontAssets": {
         "default": {
             "description": "默认字体",
-            "path": "Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF.asset",
+            "path": "Assets/GameAssets/ABNew/Font/TextFont/TextFont SDF.asset",
             "materialPreset": {
                 "shadow": {
                     "description": "描边预设",
-                    "path": "Assets/GameAssets/ABNew/Font/SLG main text/SLG main text SDF miaobian1.mat"
+                    "path": "Assets/GameAssets/ABNew/Font/TextFont/TextFont Atlas Outline-black.mat"
                 }
             }
         },
         "title": {
             "description": "标题字体",
-            "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle SDF.asset",
+            "path": "Assets/GameAssets/ABNew/Font/TitleFont/TitleFont SDF.asset",
             "materialPreset": {
                 "shadow": {
                     "description": "描边预设",
-                    "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle miaobian1.mat"
+                    "path": "Assets/GameAssets/ABNew/Font/TitleFont/TitleFont 36pt Outline-Black.mat"
                 },
                 "yellow": {
                     "description": "黄色艺术字预设",
-                    "path": "Assets/GameAssets/ABNew/Font/SLGTitle/SLGTitle yishuzi01.mat"
+                    "path": "Assets/GameAssets/ABNew/Font/TitleFont/TitleFont outline yellow.mat"
                 }
             }
         },
