@@ -23,6 +23,11 @@ namespace AutoUI
         }
         private static void RecursionInit(List<Layer> layers)
         {
+            if(layers == null)
+            {
+                LogUtil.LogWarning("RecursionInit layers is null");
+                return;
+            }
             foreach (var layer in layers)
             {
                 handleList(layer);

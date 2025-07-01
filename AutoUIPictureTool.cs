@@ -8,17 +8,20 @@ namespace AutoUI
     // 这个类是一个对Pixel进行处理的元操作
     public class AutoUIPictureTool
     {
-        public static void PictureLayerGameObjectAddSprite(GameObject gameObject, Sprite sprite)
+        public static void PictureLayerGameObjectAddSprite(GameObject gameObject, Sprite sprite, Layer layer)
         {
             Image image = gameObject.AddComponent<Image>();
             image.sprite = sprite;
+            Color color = image.color;
+            color.a = layer.opacity;
+            image.color = color;
             if (sprite.border != Vector4.zero)
             {
                 // 这是九宫格
                 image.type = Image.Type.Sliced;
             }
         }
-        public static void 添加图片sprite(ref GameObject gameobject ,in Layer layer)
+        public static void 添加图片sprite(ref GameObject gameobject, in Layer layer)
         {
             FindSpriteResult result = AutoUIAssets.GetSprite(layer.name);
             if (result == null)
@@ -30,7 +33,7 @@ namespace AutoUI
             {
                 case EFindAssetStatus.oneResult:
                     Sprite sprite = result.oneResult.sprite;
-                    PictureLayerGameObjectAddSprite(gameobject, sprite);
+                    PictureLayerGameObjectAddSprite(gameobject, sprite, layer);
                     break;
                 case EFindAssetStatus.manyResult:
                     LogUtil.LogWarning("出现了多个同名的sprite:" + layer.name + "需要手动解决");
@@ -43,6 +46,6 @@ namespace AutoUI
                     break;
             }
         }
-        
+
     }
 }

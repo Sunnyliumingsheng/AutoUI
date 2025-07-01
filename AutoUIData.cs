@@ -74,6 +74,7 @@ namespace AutoUI
     public class Layer
     {
         public RectTransform rectTransform;
+        public float opacity;
         public string name;
         public bool visible;
         public string layerKind;
@@ -94,7 +95,7 @@ namespace AutoUI
                 recusionLayers(this.layers);
             }
         }
-        public void recusionLayers(List<Layer> layers)
+        private void recusionLayers(List<Layer> layers)
         {
             foreach (var layer in layers)
             {
@@ -102,6 +103,11 @@ namespace AutoUI
                 if (layer.eLayerKind == ELayerKind.group)
                 {
                     LogUtil.Log((layer.layers == null).ToString());
+                    if (layer.layers == null)
+                    {
+                        LogUtil.LogWarning("出现了错误的,layername:"+layer.name);
+
+                    }
                     recusionLayers(layer.layers);
                 }
                 else

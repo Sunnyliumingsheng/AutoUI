@@ -12,6 +12,8 @@ namespace AutoUI
             ///////// 基础设置
             TextMeshProUGUI tmp = textGameObject.AddComponent<TextMeshProUGUI>();
 
+            // 默认对齐方式
+            tmp.alignment = TextAlignmentOptions.Center;
             // 文本
             tmp.text = layer.textLayerData.text;
 
@@ -46,8 +48,11 @@ namespace AutoUI
                 tmp.fontSharedMaterial = presetMaterial;
             }
 
-            // 是否换行 todo 在PS中开发一下这个获取的功能
             tmp.enableWordWrapping = layer.textLayerData.warp;
+            if (layer.textLayerData.warp)
+            {
+                tmp.alignment = TextAlignmentOptions.TopLeft;
+            }
 
             // 文本的旋转
             tmp.rectTransform.rotation = Quaternion.Euler(0, 0, layer.textLayerData.rotation);
