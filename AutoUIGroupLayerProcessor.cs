@@ -24,7 +24,6 @@ namespace AutoUI
                 var button = newGameObject.AddComponent<UnityEngine.UI.Button>();
                 if (AutoUIConfig.config.Default.ButtonClickEffect.EnableClickEffect)
                 {// 如果使用点击效果
-                    newGameObject.AddComponent<UnityFramework.ButtonClickEffect>();
                 }
             }
 
