@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using UnityFramework;
 
 namespace AutoUI
 {
@@ -70,10 +69,6 @@ namespace AutoUI
             // 本地化组件支持 项目强制
             if (AutoUIConfig.config.Default.Localization.IsUseLocalization)
             {
-                var localizationTextTMP = textGameObject.AddComponent<LocalizationText_TMP>();
-                var field = typeof(LocalizationText_TMP).GetField("mLabel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                field.SetValue(localizationTextTMP, tmp);
-                EditorUtility.SetDirty(localizationTextTMP);
             }
 
             // title组件支持
